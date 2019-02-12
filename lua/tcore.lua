@@ -149,7 +149,7 @@ end
 
 local function reload_dir(dir)
   local _,folders = file.Find("tcore/*","LUA")
-  if(table.HasValue(folders,dir)) then
+  if (table.HasValue(folders,dir)) then
     if (SERVER) then
       init_dir(dir .. "/libraries")
       init_dir(dir .. "/preinit")
@@ -166,13 +166,13 @@ end
 local function find_lib(dir,name)
   local res
   res = {load_file(dir .. "/libraries/" .. name .. ".lua")}
-  if not res then
+  if SERVER and (not res or res[2] == "nofile") then
     res = {load_file(dir .. "/libraries/server/" .. name .. ".lua")}
   end
-  if not res then
+  if CLIENT and (not res or  res[2] == "nofile") then
     res = {load_file(dir .. "/libraries/client/" .. name .. ".lua")}
   end
-  if not res then
+  if not res or res[2] == "nofile" then
     return nil
   end
   return unpack(res)
@@ -217,6 +217,7 @@ end
 
 
 function TCore.init()
+TCore.libs = {}
   if SERVER then
     util.AddNetworkString("TCoreForceReload")
     msg("Detouring Errors")
@@ -224,7 +225,6 @@ function TCore.init()
   end
   msg("Init Files")
   initfiles()
-  TCore.loaded = true
   msg("Loaded!")
 
   if CLIENT then
@@ -248,14 +248,14 @@ function TCore.init()
           net.WriteString("all")
         end
         net.Broadcast()
-        if args[1] == "all" then
-          initfiles()
+        if args[1] then
+          reload_dir(args[1])
         else
-          reload_dir(what)
+          initfiles()
         end
       end
     end)
   end
-
+  TCore.loaded = true
 end
 --TCore.init()
