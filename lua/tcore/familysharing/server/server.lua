@@ -14,7 +14,7 @@ Depending on the settings you assign you may also ban users by IP too what will 
 local SteamFamilySharing = {}
 --SteamFamilySharing.APIKey required to deal with those family sharing.
 --You may obtain your Steam API Key from here | http://steamcommunity.com/dev/apikey
-SteamFamilySharing.APIKey = "8F775689EFD7E84A19754F2ACD05432F"
+SteamFamilySharing.APIKey = util.GetApiKey()
 
 --The message displayed to those who connect by a family shared account that has been banned.
 SteamFamilySharing.kickmessage = "Raczej nie."
