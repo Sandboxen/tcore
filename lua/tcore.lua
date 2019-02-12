@@ -147,6 +147,22 @@ local _,folders = file.Find("tcore/*","LUA")
   end
 end
 
+local function reload_dir(dir)
+  local _,folders = file.Find("tcore/*","LUA")
+  if(table.HasValue(folders,dir)) then
+    if (SERVER) then
+      init_dir(dir .. "/libraries")
+      init_dir(dir .. "/preinit")
+      init_dir(dir .. "/postinit")
+      init_dir(dir .. "/entities")
+      init_dir(dir .. "/weapons")
+      init_dir(dir)
+    end
+    loadmodule(dir)
+  end
+end
+
+
 local function find_lib(dir,name)
   local res
   res = {load_file(dir .. "/libraries/" .. name .. ".lua")}
@@ -213,14 +229,24 @@ function TCore.init()
 
   if CLIENT then
     net.Receive("TCoreForceReload",function()
+    local what = net.ReadString()
+    if what == "all" then
       initfiles()
+    else
+      reload_dir(what)
+    end
     end)
   end
 
   if SERVER then
-    concommand.Add("tcore_reloadlua",function(ply)
+    concommand.Add("tcore_reloadlua",function(ply,_,args)
       if ply:IsSuperAdmin() or ply:IsTomek() then
         net.Start("TCoreForceReload")
+        if args[1] then
+          net.WriteString(args[1])
+        else
+          net.WriteString("all")
+        end
         net.Broadcast()
         initfiles()
       end
