@@ -248,7 +248,7 @@ function TCore.init()
           net.WriteString("all")
         end
         net.Broadcast()
-        if what == "all" then
+        if args[1] == "all" then
           initfiles()
         else
           reload_dir(what)
