@@ -1,6 +1,7 @@
 if SERVER then
 	util.AddNetworkString("JoinQuitMessage")
 	apikey = util.GetApiKey()
+	
 	hoursurl = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key="
 	function CheckPlayTime( ply )
 		ply1 = ply
