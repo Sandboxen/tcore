@@ -296,7 +296,7 @@ TCore.libs = {}
       for _,filename in ipairs(v) do
        local s = CompileFile(filename)
        if not s then
-        msg("Requesting File And Loading Manualy")
+        msg("Requesting File And Loading Manually")
         net.Start("TCoreRequestCSFile")
         net.WriteString(filename)
         net.SendToServer()
