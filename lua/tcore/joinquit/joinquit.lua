@@ -1,14 +1,16 @@
 if SERVER then
 	util.AddNetworkString("JoinQuitMessage")
 	apikey = util.GetApiKey()
-	
+
 	hoursurl = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key="
 	function CheckPlayTime( ply )
 		ply1 = ply
 		httpurl = "" .. hoursurl .. "" .. apikey .. "&steamid=" .. ply:SteamID64() .. "&format=json"
 		http.Fetch( httpurl , function ( contents, size )
-		local data = util.JSONToTable(contents)["response"]["games"]
-		if (data) then
+		if not contents then return end
+		local data = util.JSONToTable(contents)
+		if (data and data["response"] and data["response"]["games"])then
+		data = data["response"]["games"]
 		for i,v in ipairs(data) do
 			if v["appid"] == 4000 then
 				local playtime = math.Round(v["playtime_forever"]/60)

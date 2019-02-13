@@ -284,6 +284,7 @@ TCore.libs = {}
     net.Receive("TCoreRequestCSFile",function(_,ply)
       local what = net.ReadString()
       local this = file.Read(what,"LUA")
+      msg(ply:Nick(), "is requesting ",what)
       net.Start("TCoreRequestCSFile")
       net.WriteString(this)
       net.Send(ply)

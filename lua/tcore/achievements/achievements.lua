@@ -90,7 +90,7 @@ hook.Add("Move","pc_task_faster_than_light",function(ply)
         end
       end
     end)
-    hook.Add("ClientLuaError","erroachieve",function( _,_,_, ply)
+    hook.Add("ClientLuaError","erroachieve",function( ply)
       PCTasks.Complete(ply,"Error")
     end)
     hook.Add("Tick","pingachive",function()
