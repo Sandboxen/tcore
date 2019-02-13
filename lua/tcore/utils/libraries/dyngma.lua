@@ -48,7 +48,7 @@ local gmameta = {
 function dyngma.Prepare()
     local gma = {files = {}}
     gma = setmetatable(gma,gmameta)
-    PrintTable(setmetatable(gma,gmameta))
+    --PrintTable(setmetatable(gma,gmameta))
     return gma
 end
 
