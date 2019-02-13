@@ -7,6 +7,7 @@ TCore.errors = {}
 TCore.clienterrors = {}
 TCore.othererrors = {}
 TCore.otherclienterrors = {}
+TCore.CSFiles = {}
 local function msg(...)
   if (SERVER) then
     MsgC("[TCoreSV]",unpack({...}))
@@ -99,14 +100,6 @@ local function run_dir(dir)
         load_file(dir .. "/client/" .. v)
       end
   end
-end
-if (SERVER) then
-TCore.CSFiles = {}
-net.Receive("TCoreRequestCSFiles",function(_,ply)
-  net.Start("TCoreRequestCSFiles")
-  net.WriteTable(TCore.CSFiles)
-  net.Send(ply)
-end)
 end
 
 local function init_dir(dir)
@@ -315,6 +308,15 @@ TCore.libs = {}
     end
   end)
 end
+if (SERVER) then
+
+net.Receive("TCoreRequestCSFiles",function(_,ply)
+  net.Start("TCoreRequestCSFiles")
+  net.WriteTable(TCore.CSFiles)
+  net.Send(ply)
+end)
+end
+
   TCore.loaded = true
 end
 --TCore.init()
