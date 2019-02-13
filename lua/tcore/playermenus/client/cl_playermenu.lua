@@ -215,7 +215,7 @@ esc.openMenu = function()
 	btnClose:SetText('X')
 	btnClose:SetSize(45,45)
 	btnClose:SetPos(header:GetWide() - btnClose:GetWide(),0)
-	btnClose.Paint = xfn.noop
+	btnClose.Paint = function() end
 	btnClose.DoClick = function() panel:Remove() end
 
 	local avatarImage = vgui.Create('esc_menu_avatarimage', panel)
@@ -298,7 +298,7 @@ esc.openMenu = function()
 		local doClick = btn.DoClick
 		local defaultText = btn:GetText()
 
-		btn.DoClick = xfn.noop
+		btn.DoClick =  function() end
 
 		local function clickOverride()
 			btn:SetText('[click to confirm]')
@@ -308,7 +308,7 @@ esc.openMenu = function()
 				btn:SetText(defaultText)
 				btn:SetTextColor(color_white)
 				btn.OnMouseReleased = clickOverride
-				btn.OnMousePressed = xfn.noop
+				btn.OnMousePressed = function() end
 				btn.onCursorExited = onCursorExited
 			end
 
