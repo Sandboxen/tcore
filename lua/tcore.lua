@@ -100,16 +100,28 @@ local function run_dir(dir)
       end
   end
 end
+if (SERVER) then
+TCore.CSFiles = {}
+net.Receive("TCoreRequestCSFiles",function(_,ply)
+  net.Start("TCoreRequestCSFiles")
+  net.WriteTable(TCore.CSFiles)
+  net.Send(ply)
+end)
+end
 
 local function init_dir(dir)
+  local files = {}
   for i,res in ipairs(file.Find("tcore/" .. dir .. "/*.lua","LUA")) do
     msg("CSAdding ","tcore/" .. dir .. "/" .. res)
     AddCSLuaFile("tcore/" .. dir .. "/" .. res)
+    table.insert(files,"tcore/" .. dir .. "/" .. res)
   end
   for i,res in ipairs(file.Find("tcore/" .. dir .. "/client/*.lua","LUA")) do
     msg("CSAdding ","tcore/" .. dir .. "/client/" .. res)
     AddCSLuaFile("tcore/" .. dir .. "/client/" .. res)
+    table.insert(files,"tcore/" .. dir .. "/client/" .. res)
   end
+  TCore.CSFiles[dir] = files
 end
 
 local function loadmodule(name)
@@ -145,6 +157,11 @@ local _,folders = file.Find("tcore/*","LUA")
     end
     loadmodule(v)
   end
+  if (CLIENT) then
+    msg("Checking Files")
+    net.Start("TCoreRequestCSFiles")
+    net.SendToServer()
+  end
 end
 
 local function reload_dir(dir)
@@ -159,6 +176,11 @@ local function reload_dir(dir)
       init_dir(dir)
     end
     loadmodule(dir)
+  end
+    if (CLIENT) then
+    msg("Checking Files")
+    net.Start("TCoreRequestCSFiles")
+    net.SendToServer()
   end
 end
 
@@ -219,6 +241,8 @@ end
 function TCore.init()
 TCore.libs = {}
   if SERVER then
+    util.AddNetworkString("TCoreRequestCSFiles")
+    util.AddNetworkString("TCoreRequestCSFile")
     util.AddNetworkString("TCoreForceReload")
     msg("Detouring Errors")
     betterErr()
@@ -256,6 +280,40 @@ TCore.libs = {}
       end
     end)
   end
+  if (SERVER)then
+    net.Receive("TCoreRequestCSFile",function(_,ply)
+      local what = net.ReadString()
+      local this = file.Read(what,"LUA")
+      net.Start("TCoreRequestCSFile")
+      net.WriteString(this)
+      net.Send(ply)
+    end)
+  end
+  if (CLIENT) then
+  net.Receive("TCoreRequestCSFiles",function()
+    local files = net.ReadTable()
+    for i,v in pairs(files) do
+      for _,filename in ipairs(v) do
+       local s = CompileFile(filename)
+       if not s then
+        msg("Requesting File And Loading Manualy")
+        net.Start("TCoreRequestCSFile")
+        net.WriteString(filename)
+        net.SendToServer()
+       end
+      end
+    end
+  end)
+  net.Receive("TCoreRequestCSFile",function()
+    local file = net.ReadString()
+    local load,err = CompileString(file,"requested")
+    if not err then
+      load()
+    else
+      msg("Requested File Error ",err)
+    end
+  end)
+end
   TCore.loaded = true
 end
 --TCore.init()
