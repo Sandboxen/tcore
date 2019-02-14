@@ -124,14 +124,14 @@ local function loadmodule(name)
     print("weap")
     msg("Loading ","tcore/" .. name .. "/entities/" .. v)
     if ok and istable(ent) then
-      scripted_ents.Register(ent,v)
+      scripted_ents.Register(ent,string.StripExtension(v))
     end
   end
   for i,v in ipairs(file.Find("tcore/" .. name .. "/weapons/*.lua","LUA")) do
     local ok, swep = load_file("tcore/" .. name .. "/weapons/" .. v)
     msg("Loading ","tcore/" .. name .. "/weapons/" .. v)
     if ok and istable(swep) then
-      weapons.Register(swep,v)
+      weapons.Register(swep,string.StripExtension(v))
     end
   end
   TCore.modules[name] = "tcore/" .. name
@@ -280,6 +280,7 @@ TCore.libs = {}
       msg(ply:Nick(), "is requesting ",what)
       net.Start("TCoreRequestCSFile")
       net.WriteString(this)
+      net.WriteString(what)
       net.Send(ply)
     end)
   end
@@ -300,14 +301,22 @@ TCore.libs = {}
   end)
   net.Receive("TCoreRequestCSFile",function()
     local file = net.ReadString()
+    local filename = net.ReadString()
     local load,err = CompileString(file,"requested")
     if not err then
-      load()
+      if string.find(filename,"/entities/") then
+        scripted_ents.Register(load(), string.StripExtension(string.GetFileFromFilename(filename)))
+      elseif string.find(filename,"/weapons/") then
+        weapons.Register(load(), string.StripExtension(string.GetFileFromFilename(filename)))
+      else
+        load()
+      end
     else
       msg("Requested File Error ",err)
     end
   end)
 end
+
 if (SERVER) then
 
 net.Receive("TCoreRequestCSFiles",function(_,ply)
