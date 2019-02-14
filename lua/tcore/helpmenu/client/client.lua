@@ -9,8 +9,6 @@ Na serwerze znajdziesz:
 4. Mnóstwo ciekawych addonów z workshopa
 ]]},
 {"Ważne Komendy",[[
-!build - Przełączenie na tryb budowania.
-!pvp - Przełączenie na tryb pvp.
 !goto - Teleportacja do innego gracza.
 !motd - Regulamin.
 !grupa - Nasza grupa steam.

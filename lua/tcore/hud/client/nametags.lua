@@ -28,12 +28,10 @@ CreateFont(tag .. "3", {
 }, 12)
 
 local awayPhrases = {
-	"Zzz",
-	"Peacefully dreaming",
-	"Passed out",
-	"Gone for a walk",
-	"Brainstorming",
-	"Out of coffee"
+	"chopaki zet wu",
+	"[spanie intensifies]",
+	"poszedl se w pizdu",
+	"mam spanko",
 }
 local function PlayersByRange()
 	local plys = player.GetAll()
@@ -74,9 +72,9 @@ hook.Add("PostDrawTranslucentRenderables", tag, function()
 		local shouldDraw = false
 		shouldDraw = not ply:Crouching() and true or shouldDraw
 		shouldDraw = (not isLply or ply:ShouldDrawLocalPlayer()) and shouldDraw or false
-		if ply.IsAFK then
-			shouldDraw = not ply:IsAFK() and shouldDraw or false
-		end
+		--if ply.IsAFK then
+			--shouldDraw = not ply:IsAFK() and shouldDraw or false
+		--end
 		shouldDraw = not ply:GetNoDraw() and shouldDraw or false
 
 		local alpha = 1
@@ -112,9 +110,8 @@ hook.Add("PostDrawTranslucentRenderables", tag, function()
 				local txt = ply:Nick()
 				DrawText(ply:Nick(), tag, 0, team.GetColor(ply:Team()))
 				DrawText(ply:GetNWString('title'), tag .. "3", 1.3, Color(80, 80, 80))
-				
-				if lply.IsAFK and ply:IsAFK() then
-					local AFKTime = math.max(0, CurTime() - ply:AFKTime())
+				if ply.IsAFK and ply:IsAFK() then
+					local AFKTime = math.max(0, ply:GetAFKTime())
 					local h = math.floor(AFKTime / 60 / 60)
 					local m = math.floor(AFKTime / 60 % 60)
 					local s = math.floor(AFKTime % 60)

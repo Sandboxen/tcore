@@ -24,7 +24,7 @@ local hostnames = {
   --"Animated Emoji WOAH",
   --"WPIERDOLMY/DUZO/TAGOW/I/JESZCZE/TROCHE+TS3",
   --"KASYNO !!",
-  --"WIELKI UPDATE 2.37",
+  "WIELKI UPDATE 21.37",
   --"PoProstuDzbanyXD"
   }
   util.AddNetworkString("HostnameChangerSync")
