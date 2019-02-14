@@ -318,16 +318,26 @@ PHUD.icons = {
 ["wrench"] =  Material("icon16/wrench.png"),
 ["alert"] = Material("icon16/exclamation.png")
 }
+local mrkp = class:new("Markup")
+local matrix = Matrix()
+mrkp.w = ScrW()
+mrkp.x = ScrW() / 2
+mrkp.y = ScrH() / 1.8
 
-
-
-
-
-
-hook.Add("PostDrawTranslucentRenderables","OverPlayerNick",function()
-
-
-end)
+local function fast_draw(x,y,nick)
+mrkp.chunks = {}
+mrkp.buffer.x = 0
+mrkp:Parse("<font=ChatFont>" .. nick)
+mrkp.x = x - mrkp.buffer.x / 2
+mrkp.y = y
+--mrkp.buffer.x = 0
+matrix:SetTranslation(Vector(mrkp.x,mrkp.y))
+cam.PushModelMatrix(matrix)
+mrkp:Draw()
+cam.PopModelMatrix()
+mrkp.chunks = {}
+mrkp.buffer.x = 0
+end
 
 hook.Add("HUDDrawTargetID","TargetIDOverride",function()
     local ply = LocalPlayer():GetEyeTrace().Entity
@@ -335,7 +345,10 @@ hook.Add("HUDDrawTargetID","TargetIDOverride",function()
         local _,_ = ply:GetPos():ToScreen()
         local healthpercent = (ply:Health() / ply:GetMaxHealth()) * 100
         local a, b, _ = ColorToHSV(team.GetColor(ply:Team()))
-        draw.DrawText(ply:Name() .. "\n" .. healthpercent .. "%\n" .. (ply.buildmode and "(BUILD)" or "(PVP)"),"ChatFont",ScrW() / 2,ScrH() / 1.8,HSVToColor(a,b * 0.8,0.9),TEXT_ALIGN_CENTER)
+        local nick = string.Replace(ply:Name(), "\n","")
+        fast_draw(ScrW() / 2,ScrH() / 1.8,nick)
+        fast_draw(ScrW()/2,ScrH()/1.7,healthpercent .. "%")
+        --draw.DrawText(ply:Name() .. "\n" .. healthpercent .. "%\n" .. (ply.buildmode and "(BUILD)" or "(PVP)"),"ChatFont",ScrW() / 2,ScrH() / 1.8,HSVToColor(a,b * 0.8,0.9),TEXT_ALIGN_CENTER)
         end
     return false
 end)
