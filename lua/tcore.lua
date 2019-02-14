@@ -34,7 +34,7 @@ local function betterErr()
     msg("Detoured!")
     hook.Add("LuaError","TCoreLuaError",function(isruntime,fullerror,sourcefile,sourceline,errorstr,stack)
       local errordata = {os.time(),isruntime,fullerror,sourcefile,sourceline,errorstr,stack}
-      if string.StartWith(sourcefile,"addons/tcore/") then
+      if string.StartWith(sourcefile or "","addons/tcore/") then
         table.insert(TCore.errors,errordata)
       else
         table.insert(TCore.othererrors,errordata)
@@ -47,7 +47,7 @@ local function betterErr()
       else
         errordata = {os.time(),"none","none",fullerror, sourcefile, sourceline, errorstr, stack}
       end
-      if string.StartWith(sourcefile,"addons/tcore/") then
+      if string.StartWith(sourcefile or "","addons/tcore/") then
         table.insert(TCore.clienterrors,errordata)
       else
         table.insert(TCore.otherclienterrors,errordata)
