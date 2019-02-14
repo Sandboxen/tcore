@@ -47,6 +47,12 @@ local reverse = false
 local maxdist = 2000
 function ENT:Draw()
 --if LocalPlayer():Name() == "Tomekb530" then return end
+if not bdraw then
+	bdraw = trequire("bdraw")
+end
+if not gxml then
+	gxml = trequire("gxml")
+end
 if not bdraw or not gxml then return end
 if self:GetPos():Distance(LocalPlayer():GetPos()) < 2000 then
 local alpha = 255

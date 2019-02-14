@@ -121,7 +121,6 @@ local function loadmodule(name)
   run_dir("tcore/" .. name)
   for i,v in ipairs(file.Find("tcore/" .. name .. "/entities/*.lua","LUA")) do
     local ok, ent = load_file("tcore/" .. name .. "/entities/" .. v)
-    print("weap")
     msg("Loading ","tcore/" .. name .. "/entities/" .. v)
     if ok and istable(ent) then
       scripted_ents.Register(ent,string.StripExtension(v))
