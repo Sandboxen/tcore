@@ -7,7 +7,7 @@ if CLIENT then
 
 	return
 end
-
+timer.Simple(5,function()
 if !util.GetApiKey or util.GetApiKey() == "" then
 	print("Error! SteamAPI library wasn't provided with any auth key!")
 	return
@@ -173,3 +173,5 @@ function PLAYER:IsFamilySharing()
 	end
 	return self.Lender and true or false
 end
+
+end)
