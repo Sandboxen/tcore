@@ -301,6 +301,7 @@ TCore.libs = {}
   net.Receive("TCoreRequestCSFile",function()
     local file = net.ReadString()
     local filename = net.ReadString()
+    msg("Got File")
     local load,err = CompileString(file,"requested")
     if not err then
       if string.find(filename,"/entities/") then
