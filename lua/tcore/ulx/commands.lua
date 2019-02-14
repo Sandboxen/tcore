@@ -12,3 +12,5 @@ local grupa = ulx.command( "Linki", "ulx grupa", ulx.grupa, "!grupa" )
 --grupa:defaultAccess( ULib.ACCESS_ADMIN )
 grupa:help( "Grupa" )
 end)
+
+hook.GetTable().ULXLoaded.tcoreload()
