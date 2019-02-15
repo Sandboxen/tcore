@@ -256,7 +256,7 @@ TCore.libs = {}
 
   if SERVER then
     concommand.Add("tcore_reloadlua",function(ply,_,args)
-      if ply:IsSuperAdmin() or ply:IsTomek() then
+      if not IsValid(ply) or ply:IsSuperAdmin() or ply:IsTomek() then
         net.Start("TCoreForceReload")
         if args[1] then
           net.WriteString(args[1])
