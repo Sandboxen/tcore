@@ -18,7 +18,7 @@ local function msg(...)
     MsgC("\n")
   end
 end
-
+TCore.msg = msg
 local function errCleaner(tab)
   while #tab > 0 and (tab[1][1] + 60 * 10 < os.time() ) do
     table.RemoveByValue(tab, tab[1])
