@@ -83,7 +83,7 @@ hook.Add("Move","pc_task_faster_than_light",function(ply)
     end)
     hook.Add("ULibCommandCalled","zlyprzyklad",function(ply,txt)
       if txt == "ulx ban" or txt == "ulx kick" or txt=="ulx mute" or txt=="ulx gag" then
-        if ply:GetUserGroup() == "wlasciciel" or ply:GetUserGroup() == "superadmin" or ply:GetUserGroup() == "admin" or  ply:GetUserGroup() == "moderator" then
+        if not IsValid(ply) or ply:GetUserGroup() == "wlasciciel" or ply:GetUserGroup() == "superadmin" or ply:GetUserGroup() == "admin" or  ply:GetUserGroup() == "moderator" then
           for i,v in ipairs(player.GetAll()) do
             PCTasks.Complete(v,"ić stont")
           end

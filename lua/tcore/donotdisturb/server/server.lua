@@ -52,3 +52,19 @@ net.Receive("DoNotDisturb",function(_,who)
     local toggle = net.ReadBool()
     who:SetPData("DoNotDisturb",toggle)
 end)
+
+ulx.oldgoto = ulx.oldgoto or ulx.goto
+function ulx.goto(c,t)
+    --print(c,t)
+    if t:GetDNDAccess(c) or c:IsSuperAdmin() or c:IsAdmin() then
+        ulx.oldgoto(c,t)
+        return
+    else
+        c:SendLua([[chat.AddText(Color(255,0,0),"[SERVER] ",Color(255,255,255),"Gracz ma włączone DND!")]])
+        return
+    end
+end
+local goto = ulx.command( "Teleport", "ulx goto", ulx.goto, "!goto" )
+goto:addParam{ type=ULib.cmds.PlayerArg, target="!^", ULib.cmds.ignoreCanTarget }
+goto:defaultAccess( ULib.ACCESS_ADMIN )
+goto:help( "Goto target." )
