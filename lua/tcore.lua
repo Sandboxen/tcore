@@ -241,6 +241,8 @@ TCore.libs = {}
   end
   msg("Init Files")
   initfiles()
+  msg("Init Files x2 in 5 secs just to be sure everythig loaded properly")
+  timer.Simple(5,initfiles)
   msg("Loaded!")
 
   if CLIENT then
