@@ -2,6 +2,7 @@ if SERVER then
   local prondsays = {}
       local spammers = {}
 timer.Create("LoadTasks",5,1,function()
+TCore.msg("Loaded Tasks")
 PCTasks.Add("Pierwszy Raz","Dołącz po raz pierwszy na serwer!")
 PCTasks.Add("Szybszy Niż Światło","Newton nie miał racji.")
 PCTasks.Add("Morderca","Bądź Mordercą.")

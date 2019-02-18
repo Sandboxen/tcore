@@ -29,6 +29,14 @@ elseif txt == "!kupvip" then
   ply:SendLua([[chat.AddText(Color(255,0,0),"[INFO]",Color(255,255,255,255)," Nie masz tyle.")]])
   end
   return ""
+elseif txt == "!pvp" then
+  ply:ConCommand("cl_godmode 0")
+  ply:SendLua([[chat.AddText(Color(255,0,0),"[INFO]",Color(255,255,255,255)," Włączono tryb pvp.")]])
+  return ""
+elseif txt == "!build" then
+ ply:ConCommand("cl_godmode 1")
+ ply:SendLua([[chat.AddText(Color(255,0,0),"[INFO]",Color(255,255,255,255)," Włączono tryb build.")]])
+ return ""
 end
 end
 )

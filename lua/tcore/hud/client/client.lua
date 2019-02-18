@@ -164,9 +164,9 @@ if IsValid(weapon) then
 
 end
 
-if LocalPlayer().buildmode != nil then
+if true then
   surface.SetFont("PHUD_Name")
-	local buildmodew = surface.GetTextSize(LocalPlayer().buildmode and "Build" or "PVP")
+	local buildmodew = surface.GetTextSize(GetConVar("cl_godmode"):GetBool() and "PVP " or "Build ")
 	local buildmodeposx,buildmodeposy = x +57,y-50
 	local buildmodepoly = {}
 	buildmodepoly[1] = {x = buildmodeposx + buildmodew + 30,y = buildmodeposy}
@@ -178,7 +178,7 @@ if LocalPlayer().buildmode != nil then
 	surface.DrawPoly(buildmodepoly)
 	surface.SetTextPos(x + 80,y-48)
   surface.SetTextColor(PHUD.fontcolor)
-	surface.DrawText(LocalPlayer().buildmode and "Build" or "PVP")
+	surface.DrawText(GetConVar("cl_godmode"):GetBool() and "Build" or "PVP")
 end
 
 if LocalPlayer():GetNWString("OnSpawn",false) then
