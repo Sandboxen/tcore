@@ -37,6 +37,9 @@ elseif txt == "!build" then
  ply:ConCommand("cl_godmode 1")
  ply:SendLua([[chat.AddText(Color(255,0,0),"[INFO]",Color(255,255,255,255)," Włączono tryb build.")]])
  return ""
+ elseif txt == "!discord" then
+  ply:SendLua([[gui.OpenURL("http://discord.gg/KYsFP4b")]])
+ return ""
 end
 end
 )

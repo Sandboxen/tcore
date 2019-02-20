@@ -86,7 +86,9 @@ relay:StartConnection()
 hook.Add("PlayerSay","TCoreDiscordPlayerSay",function(ply,txt,team)
     GetAvatar(ply:SteamID(),function(ret)
         --print(ret)
-        relay:SendMessage({avatar_url=ret,content=txt,username=ply:Name()})
+        if team == CHATMODE_DEFAULT then
+            relay:SendMessage({avatar_url=ret,content=txt,username=ply:Name()})
+        end
     end)
 end)
 hook.Add("player_connect","TCoreDiscordRelayPlayerConnect",function(data)

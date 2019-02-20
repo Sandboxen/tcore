@@ -166,8 +166,8 @@ end
 
 if true then
   surface.SetFont("PHUD_Name")
-	local buildmodew = surface.GetTextSize(GetConVar("cl_godmode"):GetBool() and "PVP " or "Build ")
-	local buildmodeposx,buildmodeposy = x +57,y-50
+	local buildmodew = surface.GetTextSize(GetConVar("cl_godmode"):GetBool() and "God: On" or "God: Off")
+	local buildmodeposx,buildmodeposy = x + 55,y-53
 	local buildmodepoly = {}
 	buildmodepoly[1] = {x = buildmodeposx + buildmodew + 30,y = buildmodeposy}
 	buildmodepoly[2] = {x = buildmodeposx + buildmodew + 30,y = buildmodeposy + 30}
@@ -176,9 +176,9 @@ if true then
   draw.NoTexture()
 	surface.SetDrawColor(PHUD.outlinecolor)
 	surface.DrawPoly(buildmodepoly)
-	surface.SetTextPos(x + 80,y-48)
+	surface.SetTextPos(x + 80,y-49)
   surface.SetTextColor(PHUD.fontcolor)
-	surface.DrawText(GetConVar("cl_godmode"):GetBool() and "Build" or "PVP")
+	surface.DrawText(GetConVar("cl_godmode"):GetBool() and "God: On" or "God: Off")
 end
 
 if LocalPlayer():GetNWString("OnSpawn",false) then

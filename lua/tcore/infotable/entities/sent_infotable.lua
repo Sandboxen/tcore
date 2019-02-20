@@ -27,7 +27,7 @@ else
 local bdraw = trequire("bdraw")
 local gxml = trequire("gxml")
 local fagmins1 ={
-["Bezimienny_33"] = {"76561198285170286"},
+["Toster"] = {"76561198262766606"},
 ["Raptoistus"] = {"76561198218416708"},
 ["Jak ci Ruski Nick Przeszkadza"] = {"76561198179740577",25},
 ["Szufler"] = {"76561198103676045"}
