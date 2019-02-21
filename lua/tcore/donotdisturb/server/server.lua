@@ -9,14 +9,14 @@ function ply:GetDNDWhitelist()
     return t
 end
 function ply:GetDNDAccess(who)
+    if self:IsDND() == false then return true end
     local wh = self:GetDNDWhitelist()
-    local hasAccess = false
     for i,v in pairs(wh) do
         if v[2] == who:SteamID64() then
-            hasAccess = true
+            return true
         end
     end
-    return hasAccess
+    return false
 end
 net.Receive("WHAddPerson",function(_,who)
     local list = util.JSONToTable(who:GetPData("dnd_whitelist","[]"))
@@ -46,7 +46,7 @@ net.Receive("GetWhitelist",function(_,who)
     net.Send(who)
 end)
 function ply:IsDND()
-    return self:GetPData("DoNotDisturb",false)
+    return self:GetInfoNum("dnd_enable", 0) == 1
 end
 net.Receive("DoNotDisturb",function(_,who)
     local toggle = net.ReadBool()
@@ -57,8 +57,7 @@ ulx.oldgoto = ulx.oldgoto or ulx.goto
 function ulx.goto(c,t)
     --print(c,t)
     if t:GetDNDAccess(c) or c:IsSuperAdmin() or c:IsAdmin() then
-        ulx.oldgoto(c,t)
-        return
+        return ulx.oldgoto(c,t)
     else
         c:SendLua([[chat.AddText(Color(255,0,0),"[SERVER] ",Color(255,255,255),"Gracz ma włączone DND!")]])
         return

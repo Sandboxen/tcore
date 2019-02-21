@@ -3,13 +3,13 @@ concommand.Add("dnd_whitelist",function()
     net.SendToServer()
 end)
 
-local dnd = CreateClientConVar("dnd_enable","0",true,false,"Do Not Disturb")
+local dnd = CreateConVar("dnd_enable","0",FCVAR_USERINFO )
 
-cvars.AddChangeCallback("dnd_enable",function()
+--[[cvars.AddChangeCallback("dnd_enable",function()
     net.Start("DoNotDisturb")
     net.WriteBool(dnd:GetBool())
     net.SendToServer()
-end)
+end)]]
 
 net.Receive("GetWhitelist",function()
     local list = net.ReadTable()
