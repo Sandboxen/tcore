@@ -155,13 +155,8 @@ local function accessCheck(roles,role)
     return false
 end
 
-hook.Add("TCoreRelayMessage","TCoreRelayCmds",function(msg,author)
-    if string.StartWith(msg,"!") then
-        local cmd = string.sub(msg, 2)
-        if string.StartWith(cmd,"status") then
-        local embeds = {}
-		local amount = player.GetCount()
-		for i,ply in pairs(player.GetAll()) do
+local function prepareEmbed(ply)
+	
 			local commid = util.SteamIDTo64(ply:SteamID()) -- move to player meta?
 			local godmode = ply:GetInfo("cl_godmode") or 1
 			local emojis = {
@@ -186,7 +181,7 @@ hook.Add("TCoreRelayMessage","TCoreRelayCmds",function(msg,author)
 					emojistr = " " .. emojistr .. emoji
 				end
 			end
-			embeds[i] = {
+			return {
 				["author"] = {
 					["name"] = string.gsub(ply:Nick(),"<.->","") .. (emojistr and ( " [" .. emojistr .. " ]") or ""),
 					["icon_url"] = cache[commid] or "https://i.imgur.com/ovW4MBM.png",
@@ -213,10 +208,39 @@ hook.Add("TCoreRelayMessage","TCoreRelayCmds",function(msg,author)
 				},
 				["color"] = ply:IsAFK() and 0xccc000 or (ply:Alive() and 0x008000 or 0x700000)
 			}
+end
+
+hook.Add("TCoreRelayMessage","TCoreRelayCmds",function(msg,author)
+    if string.StartWith(msg,"!") then
+        local cmd = string.sub(msg, 2)
+        if string.StartWith(cmd,"status") then
+        local message = 1
+        local plytabs = {}
+		local amount = player.GetCount()
+        for i,ply in pairs(player.GetAll()) do
+            plytabs[message] = plytabs[message] or {}
+            table.insert(plytabs[message],ply)
+            if (#plytabs[message] == 10) then
+                message = message + 1
             end
-            relay:SendMessage({content="**Nazwa:** " .. GetHostName() .. "\n**Czas Online:** " .. string.NiceTime(CurTime()) .. "\n**Mapa:** " .. game.GetMap() .. "\n**Gracze:** ".. #player.GetAll() .. "/" .. game.MaxPlayers(),
-            embeds = embeds
-            })
+        end
+        for i,v in ipairs(plytabs) do
+            local embeds = {}
+            for i,v in ipairs(v) do
+                table.insert(embeds,prepareEmbed(v))
+            end
+            if i == 1 then
+                relay:SendMessage({content="**Nazwa:** " .. GetHostName() .. "\n**Czas Online:** " .. string.NiceTime(CurTime()) .. "\n**Mapa:** " .. game.GetMap() .. "\n**Gracze:** ".. #player.GetAll() .. "/" .. game.MaxPlayers(),
+                embeds = embeds
+                })
+            else
+                timer.Simple(0.1,function()
+                relay:SendMessage({content="Dalsza czesc graczy",
+                embeds = embeds
+                })
+                end)
+            end
+        end
         elseif string.StartWith(cmd,"rcon") then
             if author[3] and (accessCheck(author[3],262158797424820224) or accessCheck(author[3],257532593145118721) ) then
                 local data = string.sub(cmd,6)
