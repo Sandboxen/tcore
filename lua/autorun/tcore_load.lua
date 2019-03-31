@@ -1,5 +1,8 @@
 if !luaerror and SERVER then
-    require("luaerror")
+    local ok, why = pcall(require,"luaerror")
+    if !ok then
+        print(why)
+    end
 end
 if (!TCore) then
 include("tcore.lua")
