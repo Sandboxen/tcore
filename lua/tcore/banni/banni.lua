@@ -331,7 +331,7 @@ elseif SERVER then
 		end
 	end
 end
-
+local CATEGORY_NAME = "Utility"
 ulx.oldban = ulx.oldban or ulx.ban
 function ulx.ban( calling_ply, target_ply, minutes, reason )
     if minutes == 0 then minutes = 60*60*24*30*12*3 end
