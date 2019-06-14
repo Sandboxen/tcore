@@ -211,7 +211,7 @@ if CLIENT then
   hook.Add("OnPCTaskCompleted","pctasks",function(ply,task)
       chat.AddText(ply,Color(200,200,200)," zdobył osiągnięcie [",Color(244, 167, 66),task,Color(200,200,200),"]")
     if ply == LocalPlayer() then
-      sendAchievement(task,PCTasks.Store[task].desc)
+      --sendAchievement(task,PCTasks.Store[task].desc)
     end
   end)
   surface.CreateFont("AchievementName",{
