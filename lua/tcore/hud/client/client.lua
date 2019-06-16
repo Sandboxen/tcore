@@ -166,7 +166,7 @@ end
 
 if true then
   surface.SetFont("PHUD_Name")
-	local buildmodew = surface.GetTextSize(GetConVar("cl_godmode"):GetBool() and "God: On" or "God: Off")
+	local buildmodew = surface.GetTextSize(LocalPlayer().buildmode and "Build" or "PVP")
 	local buildmodeposx,buildmodeposy = x + 55,y-53
 	local buildmodepoly = {}
 	buildmodepoly[1] = {x = buildmodeposx + buildmodew + 30,y = buildmodeposy}
@@ -178,7 +178,7 @@ if true then
 	surface.DrawPoly(buildmodepoly)
 	surface.SetTextPos(x + 80,y-49)
   surface.SetTextColor(PHUD.fontcolor)
-	surface.DrawText(GetConVar("cl_godmode"):GetBool() and "God: On" or "God: Off")
+	surface.DrawText(LocalPlayer().buildmode and "Build" or "PVP")
 end
 
 if LocalPlayer():GetNWString("OnSpawn",false) then
@@ -326,7 +326,8 @@ hook.Add("HUDDrawTargetID","TargetIDOverride",function()
         local healthpercent = (ply:Health() / ply:GetMaxHealth()) * 100
         local a, b, _ = ColorToHSV(team.GetColor(ply:Team()))
         local nick = string.Replace(ply:Name(), "\n","")
-        draw.DrawText(ply:Name() .. "\n" .. healthpercent .. "%\n" ,"ChatFont",ScrW() / 2,ScrH() / 1.8,HSVToColor(a,b * 0.8,0.9),TEXT_ALIGN_CENTER)
+        local build = ply.buildmode and "[BUILD]" or "[PVP]"
+        draw.DrawText(ply:Name() .. "\n" .. healthpercent .. "%\n"..build ,"ChatFont",ScrW() / 2,ScrH() / 1.8,HSVToColor(a,b * 0.8,0.9),TEXT_ALIGN_CENTER)
         end
     return false
 end)
