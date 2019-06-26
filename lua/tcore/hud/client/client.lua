@@ -12,6 +12,7 @@ PHUD.texture = GetRenderTarget('hudtext'..os.time(), ScrW(),ScrH(), false)
 PHUD.rtmat = CreateMaterial("hudmat"..os.time(),"UnlitGeneric",{
 	['$basetexture'] = PHUD.texture,
   ["$translucent"] = 1,
+  
 });
 --local contextmenu = false
 --local col = Color(0,0,0,0)

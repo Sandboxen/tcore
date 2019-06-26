@@ -356,3 +356,27 @@ local banniub = ulx.command( CATEGORY_NAME, "ulx unbanni", ulx.banniunban, "!unb
 banniub:addParam{ type=ULib.cmds.PlayerArg }
 banniub:defaultAccess( ULib.ACCESS_ADMIN )
 banniub:help( "UnBans target." )
+
+function ulx.bannid( calling_ply, target_ply, minutes, reason )
+    if minutes == 0 then minutes = 60*60*24*30*12*3 end
+    if not reason then reason = "Admin ma zawsze racje" end
+    banni.ban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",target_ply,minutes*60,reason)
+end
+local ban = ulx.command( CATEGORY_NAME, "ulx bannid", ulx.bannid, "!bannid", false, false, true )
+ban:addParam{ type=ULib.cmds.StringArg }
+ban:addParam{ type=ULib.cmds.NumArg, hint="minutes, 0 for perma", ULib.cmds.optional, ULib.cmds.allowTimeString, min=0 }
+ban:addParam{ type=ULib.cmds.StringArg, hint="reason", ULib.cmds.optional, ULib.cmds.takeRestOfLine, completes=ulx.common_kick_reasons }
+ban:defaultAccess( ULib.ACCESS_ADMIN )
+ban:help( "Bans target funs way." )
+
+--ulx.oldunban = ulx.oldunban or ulx.unban
+
+function ulx.bannidunban( calling_ply, target_ply)
+	--print(target_ply)
+	banni.unban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",target_ply,"unban")
+end
+
+local banniub = ulx.command( CATEGORY_NAME, "ulx unbannid", ulx.bannidunban, "!unbannid", false, false, true )
+banniub:addParam{ type=ULib.cmds.StringArg }
+banniub:defaultAccess( ULib.ACCESS_ADMIN )
+banniub:help( "UnBans target." )
