@@ -332,24 +332,27 @@ elseif SERVER then
 	end
 end
 local CATEGORY_NAME = "Utility"
-ulx.oldban = ulx.oldban or ulx.ban
-function ulx.ban( calling_ply, target_ply, minutes, reason )
+--ulx.oldban = ulx.oldban or ulx.ban
+function ulx.banni( calling_ply, target_ply, minutes, reason )
     if minutes == 0 then minutes = 60*60*24*30*12*3 end
     if not reason then reason = "Admin ma zawsze racje" end
     banni.ban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",target_ply:SteamID(),minutes*60,reason)
 end
-local ban = ulx.command( CATEGORY_NAME, "ulx ban", ulx.ban, "!ban", false, false, true )
+local ban = ulx.command( CATEGORY_NAME, "ulx banni", ulx.banni, "!banni", false, false, true )
 ban:addParam{ type=ULib.cmds.PlayerArg }
 ban:addParam{ type=ULib.cmds.NumArg, hint="minutes, 0 for perma", ULib.cmds.optional, ULib.cmds.allowTimeString, min=0 }
 ban:addParam{ type=ULib.cmds.StringArg, hint="reason", ULib.cmds.optional, ULib.cmds.takeRestOfLine, completes=ulx.common_kick_reasons }
 ban:defaultAccess( ULib.ACCESS_ADMIN )
-ban:help( "Bans target." )
+ban:help( "Bans target funs way." )
 
-ulx.oldunban = ulx.oldunban or ulx.unban
-function ulx.unban( calling_ply, steamid )
-    banni.unban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",steamid,"unban")
+--ulx.oldunban = ulx.oldunban or ulx.unban
+
+function ulx.banniunban( calling_ply, target_ply)
+	--print(target_ply)
+	banni.unban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",target_ply:SteamID(),"unban")
 end
-local unban = ulx.command( CATEGORY_NAME, "ulx unban", ulx.unban, "!unban", false, false, true )
-unban:addParam{ type=ULib.cmds.StringArg, hint="steamid" }
-unban:defaultAccess( ULib.ACCESS_ADMIN )
-unban:help( "Unbans steamid." )
+
+local banniub = ulx.command( CATEGORY_NAME, "ulx unbanni", ulx.banniunban, "!unbanni", false, false, true )
+banniub:addParam{ type=ULib.cmds.PlayerArg }
+banniub:defaultAccess( ULib.ACCESS_ADMIN )
+banniub:help( "UnBans target." )

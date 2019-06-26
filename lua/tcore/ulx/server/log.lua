@@ -4,3 +4,4 @@ function logtool(ply, tr, tool)
 	end
 end
 hook.Add( "CanTool", "ToolLogging", logtool )
+--hook.Remove("CanTool","ToolLogging") -- disable

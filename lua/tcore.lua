@@ -310,6 +310,8 @@ TCore.libs = {}
         scripted_ents.Register(load(), string.StripExtension(string.GetFileFromFilename(filename)))
       elseif string.find(filename,"/weapons/") then
         weapons.Register(load(), string.StripExtension(string.GetFileFromFilename(filename)))
+      elseif string.find(filename,"/libraries/") then
+        TCore.libs[string.StripExtension(string.GetFileFromFilename(filename))] = load()
       else
         load()
       end

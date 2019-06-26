@@ -26,6 +26,7 @@ end
 else
 local bdraw = trequire("bdraw")
 local gxml = trequire("gxml")
+local tdui = trequire("tdui")
 local fagmins1 ={
 ["Toster"] = {"76561198262766606"},
 ["Raptoistus"] = {"76561198218416708"},
@@ -53,7 +54,10 @@ end
 if not gxml then
 	gxml = trequire("gxml")
 end
-if not bdraw or not gxml then return end
+if not tdui then
+	tdui = trequire("tdui")
+end
+if not bdraw or not gxml or not tdui then return end
 if self:GetPos():Distance(LocalPlayer():GetPos()) < 2000 then
 local alpha = 255
 if anim > 1900 and reverse == false then

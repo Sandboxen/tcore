@@ -1,12 +1,18 @@
 local tag = "PolskiHUD"
 PHUD = {}
-PHUD.posx,PHUD.posy = 120,ScrH() - 120
-PHUD.size = 150
+PHUD.posx,PHUD.posy = 150,150
+PHUD.screenposx,PHUD.screenposy = 0,ScrH()-300
+PHUD.scale = 1
 PHUD.enabled = CreateClientConVar("phud_enabled","1")
 PHUD.maincolor = Color(200,0,20,255)
 PHUD.outlinecolor = Color(0,100,0,200)
 PHUD.armorcolor = Color(127,127,127,255)
 PHUD.fontcolor = Color(255,255,255,255)
+PHUD.texture = GetRenderTarget('hudtext'..os.time(), ScrW(),ScrH(), false)
+PHUD.rtmat = CreateMaterial("hudmat"..os.time(),"UnlitGeneric",{
+	['$basetexture'] = PHUD.texture,
+  ["$translucent"] = 1,
+});
 --local contextmenu = false
 --local col = Color(0,0,0,0)
 --local healthicon = Material("icon16/heart.png")
@@ -44,7 +50,7 @@ local function doHook()
 if IsValid(LocalPlayer()) then
 local myhp = LocalPlayer():GetMaxHealth()
 local myarmor = 100
-local defaultsets = util.TableToJSON({PHUD.maincolor,PHUD.armorcolor,PHUD.outlinecolor,PHUD.fontcolor})
+local defaultsets = util.TableToJSON({PHUD.maincolor,PHUD.armorcolor,PHUD.outlinecolor,PHUD.fontcolor,PHUD.scale,PHUD.screenposx,PHUD.screenposy})
 local settings = file.Read("phud.txt")
 settings = settings or defaultsets
 local sets = util.JSONToTable(settings)
@@ -52,10 +58,22 @@ PHUD.maincolor = sets[1]
 PHUD.armorcolor = sets[2]
 PHUD.outlinecolor = sets[3]
 PHUD.fontcolor = sets[4]
+PHUD.scale = sets[5]
+PHUD.screenposx = sets[6]
+PHUD.screenposy = sets[7]
 hook.Add("HUDPaint",tag,function()
+local scrw, scrh = ScrW(), ScrH()
+--if not LocalPlayer():IsTomek() then return end
 if not PHUD.enabled:GetBool() then return end
 if pk_pills and IsValid(pk_pills.getMappedEnt(LocalPlayer())) then return end
 if LocalPlayer() then
+render.PushRenderTarget(PHUD.texture)
+	cam.Start2D()
+
+	render.OverrideAlphaWriteEnable(true, true)
+  render.ClearDepth()
+render.Clear( 0, 0, 0, 0 )
+
 local x,y = PHUD.posx,PHUD.posy
 myarmor = Lerp(FrameTime() * 3,myarmor,LocalPlayer():Armor())
 myhp = Lerp(FrameTime() * 3,myhp,LocalPlayer():Health())
@@ -90,6 +108,7 @@ surface.DrawText(LocalPlayer():Health())
 
 surface.SetFont("PHUD_Name")
 local namew = surface.GetTextSize(LocalPlayer():Name())
+namewhud = namew
 local nameposx,nameposy = x + 15,y-90
 local namepoly = {}
 namepoly[1] = {x = nameposx + namew + 30,y = nameposy}
@@ -166,7 +185,7 @@ end
 
 if true then
   surface.SetFont("PHUD_Name")
-	local buildmodew = surface.GetTextSize(GetConVar("cl_godmode"):GetBool() and "God: On" or "God: Off")
+	local buildmodew = surface.GetTextSize(LocalPlayer().buildmode and "Build" or "PVP")
 	local buildmodeposx,buildmodeposy = x + 55,y-53
 	local buildmodepoly = {}
 	buildmodepoly[1] = {x = buildmodeposx + buildmodew + 30,y = buildmodeposy}
@@ -178,7 +197,7 @@ if true then
 	surface.DrawPoly(buildmodepoly)
 	surface.SetTextPos(x + 80,y-49)
   surface.SetTextColor(PHUD.fontcolor)
-	surface.DrawText(GetConVar("cl_godmode"):GetBool() and "God: On" or "God: Off")
+	surface.DrawText(LocalPlayer().buildmode and "Build" or "PVP")
 end
 
 if LocalPlayer():GetNWString("OnSpawn",false) then
@@ -219,8 +238,12 @@ surface.DrawLine(x,y + 106,x-106,y)
 draw.NoTexture()
 surface.DrawLine(x,y + 107,x + 107,y)
 surface.DrawLine(x,y + 106,x + 106,y)
-
-
+	cam.End2D()
+render.PopRenderTarget()
+PHUD.rtmat:SetTexture('$basetexture', PHUD.texture)
+	--surface.SetDrawColor(255,255,255,254)
+	surface.SetMaterial(PHUD.rtmat)
+	surface.DrawTexturedRect(PHUD.screenposx or 0,PHUD.screenposy or ScrH()-300, ScrW()*(PHUD.scale or 1),ScrH()*(PHUD.scale or 1))
 end
 end)
 end
@@ -235,7 +258,7 @@ hook.Add("InitPostEntity",tag,doHook)
 --VGUI--
 
 local function savesets()
-local tab = {PHUD.maincolor,PHUD.armorcolor,PHUD.outlinecolor,PHUD.fontcolor}
+local tab = {PHUD.maincolor,PHUD.armorcolor,PHUD.outlinecolor,PHUD.fontcolor,PHUD.scale,PHUD.screenposx,PHUD.screenposy}
 file.Write("phud.txt",util.TableToJSON(tab))
 end
 
@@ -258,22 +281,42 @@ PHUD[var] = col
 end
 end
 
+local function fastslider(parent,var,txt,min,max,dec)
+local p = vgui.Create("DPanel",parent)
+p:Dock(TOP)
+p.Paint = function() end
+local scaleslider = vgui.Create("DNumSlider",p)
+scaleslider:SetText(txt)
+scaleslider:Dock(TOP)
+scaleslider:SetMin(min)
+scaleslider:GetChildren()[3]:SetTextColor(Color(255,255,255))
+scaleslider:SetMax(max)
+scaleslider:SetDecimals(dec)
+scaleslider:SetValue(PHUD[var])
+function scaleslider:OnValueChanged(col)
+PHUD[var] = col
+end
+end
+
 local function EditGui()
 local frame = vgui.Create("DFrame")
 frame:SetSize(420,500)
 frame:Center()
 frame:MakePopup()
 frame:SetTitle("HUD Editor")
-frame.Paint = function(_,w,h)
-surface.SetDrawColor(Color(20,20,20,200))
+--[[frame.Paint = function(_,w,h)
+surface.SetDrawColor(Color(20,20,20,255))
 surface.DrawRect(0,0,w,h)
-end
+end]]
 local panel = vgui.Create("DScrollPanel",frame)
 panel:Dock(FILL)
-makecombovar(panel,"maincolor","Kolor HP",0,0,385,250)
-makecombovar(panel,"armorcolor","Kolor Armora",0,260,385,250)
-makecombovar(panel,"outlinecolor","Kolor Tla",0,520,385,250)
-makecombovar(panel,"fontcolor","Kolor Czcionki",0,780,385,250)
+fastslider(panel,"scale","Skala",0,2,2)
+fastslider(panel,"screenposx","PozycjaX",0,ScrW(),0)
+fastslider(panel,"screenposy","PozycjaY",0,ScrH(),0)
+makecombovar(panel,"maincolor","Kolor HP",0,80,385,250)
+makecombovar(panel,"armorcolor","Kolor Armora",0,340,385,250)
+makecombovar(panel,"outlinecolor","Kolor Tla",0,600,385,250)
+makecombovar(panel,"fontcolor","Kolor Czcionki",0,860,385,250)
 
 function frame:OnClose()
 frame:Remove()
@@ -326,7 +369,8 @@ hook.Add("HUDDrawTargetID","TargetIDOverride",function()
         local healthpercent = (ply:Health() / ply:GetMaxHealth()) * 100
         local a, b, _ = ColorToHSV(team.GetColor(ply:Team()))
         local nick = string.Replace(ply:Name(), "\n","")
-        draw.DrawText(ply:Name() .. "\n" .. healthpercent .. "%\n" ,"ChatFont",ScrW() / 2,ScrH() / 1.8,HSVToColor(a,b * 0.8,0.9),TEXT_ALIGN_CENTER)
+        local build = ply.buildmode and "[BUILD]" or "[PVP]"
+        draw.DrawText(ply:Name() .. "\n" .. healthpercent .. "%\n"..build ,"ChatFont",ScrW() / 2,ScrH() / 1.8,HSVToColor(a,b * 0.8,0.9),TEXT_ALIGN_CENTER)
         end
     return false
 end)

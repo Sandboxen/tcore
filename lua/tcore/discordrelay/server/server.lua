@@ -85,8 +85,8 @@ relay:StartConnection()
 
 hook.Add("PlayerSay","TCoreDiscordPlayerSay",function(ply,txt,team)
     GetAvatar(ply:SteamID(),function(ret)
-        --print(ret)
-        if team == CHATMODE_DEFAULT then
+        --print(team)
+        if team == CHATMODE_DEFAULT or team == false then
             relay:SendMessage({avatar_url=ret,content=txt,username=ply:Name()})
         end
     end)
@@ -133,7 +133,7 @@ hook.Add("player_disconnect","TCoreDiscordRelayPlayerConnect",function(data)
     GetAvatar(sid,function(ret)
         --print(ret)
         local embed = {
-            description = "Wyszedł z serwera.",
+            description = "Wyszedł z serwera. \n("..data.reason..")",
             color = 16711680,
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
             author = {

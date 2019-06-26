@@ -1,31 +1,9 @@
 local hostnames = {
   --"guwno/guwno/guwno/TS/guwno/guwno/guwno/guwno/guwno",
-  "Zapraszamy !",
-  "Życzymy miłej gry!",
-  "Build/PVP",
-  "FASTDL",
-  "HL2(EP)/CSS/CSGO/L4D2/PORTAL2",
-  "WIRE/ACF/SF/SPROPS/M9K",
-  "PAC3/OUTFITTER",
-  "DUŻO ADDONÓW !",
-  --":thinking:",
-  "Najlepszy Sandbox w Polsce!",
-  "Szybkie dołączanie!!",
-  "Wielkie Poprawki!",
-  --"Jesteśmy Najlepsi!",
-  --"KONKURENCJA DLA PEWNEJ SIECI OMG",
-  --"My myslimy nie to co reszta",
-  --"Dla prawdziwych budowniczych",
-  --"Istniejemy od 3 lat!",
-  "Lepszy niz inne serwery",
-  --"Fiku miku i skok z klifu",
-  --"Dawaj spotkamy sie w realu",
-  --"Śmieszki",
-  --"Animated Emoji WOAH",
-  --"WPIERDOLMY/DUZO/TAGOW/I/JESZCZE/TROCHE+TS3",
-  --"KASYNO !!",
-  "WIELKI UPDATE 21.37",
-  --"PoProstuDzbanyXD"
+  "Masa addonów!",
+  "Dla prawdziwych budowniczych!",
+  "ACF/E2/SProps/PAC3",
+  "Jedyny Taki W Swoim Rodzaju"
   }
   util.AddNetworkString("HostnameChangerSync")
   local activehostname = ""
