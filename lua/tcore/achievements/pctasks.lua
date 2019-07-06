@@ -33,7 +33,12 @@ if SERVER then
 
     util.AddNetworkString(PCTasksSend)
     util.AddNetworkString(PCTasksFinish)
-
+    
+    net.Receive("PCTasksRequestTasks",function(_,ply)
+    net.Start("PCTasksRequestTasks")
+    net.WriteTable(PCTasks.Store)
+    net.Send(ply)
+    end)
     PCTasks.Send = function(ply)
         net.Start(PCTasksSend)
         net.WriteTable(PCTasks.Store)
@@ -79,6 +84,9 @@ if SERVER then
     hook.Add("PlayerInitialSpawn","pctasks",function(ply)
         PCTasks.Send(ply)
         ply.PCTasks_Init_Passed = true
+    end)
+    hook.Add("PlayerSpawn","pctasks",function(ply)
+    PCTasks.UpdateClients()        
     end)
 
 end

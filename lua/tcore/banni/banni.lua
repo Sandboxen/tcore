@@ -84,6 +84,7 @@ if CLIENT then
 				v.origmat = v:GetMaterial()
 				v:SetMaterial( "models/debug/debugwhite" )
 				v:SetColor(Color(255,0,0))
+				v.buildmode = false
 			elseif v.banni == false and v:GetColor() ~= Color(255,255,255) then
 				v:SetMaterial( v.origmat )
 				v:SetColor(Color(255,255,255))
@@ -182,6 +183,7 @@ elseif SERVER then
 				ply:SetRunSpeed(ply:GetWalkSpeed())
 				ply:SetSuperJumpMultiplier(1)
 				ply:SetJumpPower(0)
+				ply.buildmode = false
 			end)
 			ply:StripWeapons()
 		end

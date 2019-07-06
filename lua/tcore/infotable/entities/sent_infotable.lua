@@ -46,6 +46,7 @@ local Rainbow  = 0
 local anim =0
 local reverse = false
 local maxdist = 2000
+local cooldown = 0
 function ENT:Draw()
 --if LocalPlayer():Name() == "Tomekb530" then return end
 if not bdraw then
@@ -72,6 +73,7 @@ else
 anim = anim +5
 end
 if Rainbow == 360 then Rainbow = 0 end
+Rainbow = Rainbow + 0.5
 if bDrawingDepth then return end
 	local x,y = -1000,-1000
     p = p or tdui.Create()
@@ -87,9 +89,11 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 	--p:Mat(chathud:GetTwitchEmoticon("25"),900-anim,y+anim,72,72,Color(255,255,255,100))
 	--p:Mat(chathud:GetTwitchEmoticon("25"),x+anim,900-anim,72,72,Color(255,255,255,100))
 	end
-  p:Text(TimeString, "Coolvetica100", x+150, y+30)
+	surface.SetFont("Screens_Roboto100")
+	local hellowidth = surface.GetTextSize("Witaj "..LocalPlayer():Name().."!")
+  	p:Text(TimeString, "Coolvetica100", x+150, y+30)
 	p:Text(DateString, "Coolvetica100", 800, y+30)
-	p:Text("Witaj !","Screens_Roboto100",0,0-600)
+	p:Text("Witaj "..LocalPlayer():Name().."!","Screens_Roboto100",0,0-600)
 	p:Text("Lista Administratorów","Screens_Roboto60",400,-230)
 	p:Text("(KLIKNIJ NA PROFILOWE ABY WEJSC NA PROFIL)","Screens_Roboto30",400,-180)
 	local k = 0
@@ -125,16 +129,33 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 	p:Text("Tomekb530","Screens_Roboto50",-800+(450/2),-200,HSVToColor(Rainbow*2,1,1))
 	p:Rect(50,-150,700,1150,Color(0,0,0,0),Color(150,0,0),5)
 	if chathud:GetDiscordEmoticon("1F600") then
-	p:Mat(chathud:GetDiscordEmoticon("1F600"),0+130,0-580,72,72)
+	p:Mat(chathud:GetDiscordEmoticon("1F600"),0+10+hellowidth/2,0-580,72,72)
 	end
-	if p:Button("Addony","Screens_Roboto100",0-800,450,450,200,Color(150,0,0),Color(255,0,0)) then
+	if p:Button("Addony","Screens_Roboto100",-950,450,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
 		LocalPlayer():ConCommand("ulx addony")
+		cooldown = CurTime()+3
 	end
-	if p:Button("Grupa","Screens_Roboto100",0-800,200,450,200,Color(150,0,0),Color(255,0,0)) then
+	if p:Button("Grupa","Screens_Roboto100",-950,200,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
 		LocalPlayer():ConCommand("ulx grupa")
+		cooldown = CurTime()+3
 	end
-	if p:Button("Pomoc","Screens_Roboto100",0-800,700,450,200,Color(150,0,0),Color(255,0,0)) then
+	if p:Button("Pomoc","Screens_Roboto100",-950,700,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
 	 LocalPlayer():ConCommand("say !pomoc")
+	 cooldown = CurTime()+3
+	end
+
+	if p:Button("Tryb PVP","Screens_Roboto100",-450,200,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
+		LocalPlayer():ConCommand("ulx pvp")
+		cooldown = CurTime()+3
+	end
+
+	if p:Button("Tryb Build","Screens_Roboto100",-450,450,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
+		LocalPlayer():ConCommand("ulx build")
+		cooldown = CurTime()+3
+	end
+	if p:Button("Osiagniecia","Screens_Roboto100",-450,700,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
+		LocalPlayer():ConCommand("achievement_list")
+		cooldown = CurTime()+3
 	end
 
     p:Cursor()

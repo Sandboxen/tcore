@@ -173,7 +173,7 @@ if IsValid(weapon) then
 	ammopoly2[3] = {x = ammoposx2,y = ammoposy2 + 30}
 	ammopoly2[4] = {x = ammoposx2 + 30,y = ammoposy2}
 	--print(clip2)
-  if allAmmo > 0 then
+  if allAmmo2 > 0 then
     draw.NoTexture()
 	surface.SetDrawColor(PHUD.outlinecolor)
 	surface.DrawPoly(ammopoly2)
