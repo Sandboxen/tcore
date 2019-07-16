@@ -76,8 +76,7 @@ sdoor:Activate()
 end
 end
 
-
-hook.Add("InitPostEntity","LoadMapPortals",function()
+--[[hook.Add("InitPostEntity","LoadMapPortals",function()
 loadMapPortals()
 end)
 concommand.Add("resetcasinodoor",function(ply)
@@ -85,4 +84,4 @@ if IsValid(ply) and ply:IsSuperAdmin() then
 loadMapPortals()
 end
 end)
-loadMapPortals()
+loadMapPortals()]]--

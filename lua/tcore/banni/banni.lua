@@ -84,7 +84,10 @@ if CLIENT then
 				v.origmat = v:GetMaterial()
 				v:SetMaterial( "models/debug/debugwhite" )
 				v:SetColor(Color(255,0,0))
+				if v.buildmode != false then
 				v.buildmode = false
+				v:SetNWBool("_Kyle_Buildmode",false)
+				end
 			elseif v.banni == false and v:GetColor() ~= Color(255,255,255) then
 				v:SetMaterial( v.origmat )
 				v:SetColor(Color(255,255,255))
@@ -184,6 +187,7 @@ elseif SERVER then
 				ply:SetSuperJumpMultiplier(1)
 				ply:SetJumpPower(0)
 				ply.buildmode = false
+				ply:SetNWBool("_Kyle_Buildmode",false)
 			end)
 			ply:StripWeapons()
 		end

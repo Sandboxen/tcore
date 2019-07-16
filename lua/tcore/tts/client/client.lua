@@ -12,7 +12,7 @@ hook.Add("OnPlayerChat","RanksTomek",function(ply,txt)
 	end
 	if string.StartWith(txt,"dectts:") then
 	local tosay = string.sub(txt,8)
-	sound.PlayURL("http://talk.moustacheminer.com/api/gen/?dectalk=" .. tosay,"3d",function(chan)
+	sound.PlayURL("http://tts.cyzon.us/tts?text=" .. tosay,"3d",function(chan)
 		if (IsValid(chan)) then
 			chan:SetPos(ply:GetPos())
 			chan:Play()

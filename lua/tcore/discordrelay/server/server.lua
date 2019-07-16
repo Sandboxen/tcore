@@ -1,4 +1,4 @@
-if (!istable(GWSockets)) then
+--[[if (!istable(GWSockets)) then
     require("gwsockets")
 end
 TCore.discordrelay = TCore.discordrelay or {}
@@ -61,7 +61,7 @@ local function onMessage(self,msg)
     local hk = hook.Run("TCoreRelayMessage",msg.content,msg.author)
     if !hk then
         --print('bc')
-        BroadcastLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"]] .. data .. [[")]]) -- TEMPORARY
+        BroadcastLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"]]--[[.. data .. [[")]]--[[) -- TEMPORARY
     end
 end
 
@@ -254,3 +254,4 @@ hook.Add("TCoreRelayMessage","TCoreRelayCmds",function(msg,author)
         return true
     end
 end)
+]]--DISABLED
