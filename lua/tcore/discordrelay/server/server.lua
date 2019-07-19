@@ -11,7 +11,6 @@ end
 local charset = {}
 
 -- qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890
-for i = 48,  57 do table.insert(charset, string.char(i)) end
 for i = 65,  90 do table.insert(charset, string.char(i)) end
 for i = 97, 122 do table.insert(charset, string.char(i)) end
 
@@ -270,3 +269,79 @@ if author[3] and (accessCheck(author[3],262158797424820224) or accessCheck(autho
                 relay:SendMessage({content=":lock:"})
             end
 end
+
+--[[DISCORD RANK SYNC]]--
+sql.Query( "CREATE TABLE IF NOT EXISTS discordid( SteamID TEXT, DiscordID TEXT )" )
+
+local function addDisId(steam,discord)
+    	 sql.Query( "INSERT INTO discordid( SteamID, DiscordID ) VALUES( '"..steam.."', '"..discord.."' )" )
+end
+
+local plyMeta = FindMetaTable("Player")
+
+function plyMeta:DiscordID()
+local id = sql.QueryValue("SELECT DiscordID FROM discordid WHERE SteamID="..self:SteamID64())
+return id
+end
+
+function getDiscordID(sid)
+local id = sql.QueryValue("SELECT DiscordID FROM discordid WHERE SteamID="..sid)
+return id
+end
+
+function getSteamID(disid)
+local id = sql.QueryValue("SELECT SteamID FROM discordid WHERE DiscordID="..disid)
+return id
+end
+
+local codes = {}
+hook.Add("PlayerSay","dislink",function(ply,txt)
+if txt == "!dislink" then
+    if !ply:DiscordID() then
+        local code = stringrandom(5)
+        codes[ply] = code
+        ply:SendLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"Twój kod do połączenia to:]] .. code .. [[")]])
+        ply:SendLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"Użyj !link ]] .. code .. [[ na kanale #gmodchat")]])
+        ply:SendLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"Kod wygaśnie za 15 sekund.")]])
+        timer.Simple(15,function()
+        codes[ply] = nil
+        end)
+        ply:SendLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"Już połączyłeś konto! (]]..ply:DiscordID()..[[)")]])
+    end
+    return ""
+end
+end)
+
+commands["link"] = function(author,data)
+    local discordid = author[1]
+    local code = data
+    for i,v in pairs(codes) do
+        if IsValid(i) and code == v then
+            relay:SendMessage({content="",
+                embeds = {
+					[1] = {
+						["title"] = "Discord Link",
+						["description"] = "Połączono z "..i:Nick(),
+						["type"] = "rich",
+						["color"] = 0x00ff00
+					}
+				}
+                })
+            codes[i] = nil
+            addDisId(i:SteamID64(),discordid)
+            PCTasks.Complete(i,"Deskord")
+            return
+        end
+    end
+    relay:SendMessage({content="",
+                embeds = {
+					[1] = {
+						["title"] = "Discord Link",
+						["description"] = "Nie znaleziono kodu! Użyj !dislink na serwerze!",
+						["type"] = "rich",
+						["color"] = 0xff0000
+					}
+				}
+                })
+end
+
