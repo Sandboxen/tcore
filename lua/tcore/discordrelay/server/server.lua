@@ -1,55 +1,28 @@
---[[if (!istable(GWSockets)) then
-    require("gwsockets")
-end
 TCore.discordrelay = TCore.discordrelay or {}
 local relay = TCore.discordrelay
+TCore.discordrelay.commands = {}
+local commands = TCore.discordrelay.commands
 local isConnected = false
 local cache = TCore.avCache
 local GetAvatar = TCore.GetAvatar
 local function emptyfunc()
 end
 
-function relay:StopConnection()
-    if (self.socket) then
-        self.socket.onConnected = emptyfunc
-        self.socket.onMessage = emptyfunc
-        self.socket:closeNow()
-        self.socket.onDisconnected = emptyfunc
-        self.socket = nil
-    end
-end
+local charset = {}
 
-function relay:StartConnection()
-    TCore.msg("Discord Relay Preparing!")
-    self.socket = GWSockets.createWebSocket("ws://localhost:3721",true)
-    self:PrepareHooks()
-    self.socket:open()
-end
+-- qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890
+for i = 48,  57 do table.insert(charset, string.char(i)) end
+for i = 65,  90 do table.insert(charset, string.char(i)) end
+for i = 97, 122 do table.insert(charset, string.char(i)) end
 
-function relay:SendMessage(msg)
-    local tosend = msg
-    tosend = util.TableToJSON(tosend)
-    if self.socket then
-        self.socket:write(tosend)
-    end
-end
+local function stringrandom(length)
+  math.randomseed(os.time())
 
-local function onDisconnect(self)
-    relay.socket = nil
-    TCore.msg("Discord Relay Disconnected!")
-    TCore.msg("Relay Dead Retrying in 10 seconds")
-    timer.Simple(10,function()
-    relay:StopConnection()
-    relay:StartConnection()
-    end)
-end
-
-gameevent.Listen("player_connect")
-gameevent.Listen("player_disconnect")
-
-local function onConnect(self)
-    TCore.msg("Discord Relay Connected!")
-    isConnected = true
+  if length > 0 then
+    return stringrandom(length - 1) .. charset[math.random(1, #charset)]
+  else
+    return ""
+  end
 end
 
 local function onMessage(self,msg)
@@ -61,27 +34,48 @@ local function onMessage(self,msg)
     local hk = hook.Run("TCoreRelayMessage",msg.content,msg.author)
     if !hk then
         --print('bc')
-        BroadcastLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"]]--[[.. data .. [[")]]--[[) -- TEMPORARY
+        BroadcastLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"]] .. data .. [[")]]) -- TEMPORARY
     end
 end
+
+function relay:SendMessage(msg)
+    local tosend = msg
+    tosend = util.TableToJSON(tosend)
+    http.Post("http://localhost:3721/sendmsg", {data=tosend})
+end
+function fetchMsgs()
+local tosend = {
+    limit = 3,
+    around = around or 0
+}
+tosend = util.TableToJSON(tosend)
+HTTP{
+success=function(_,bd)--uber anti cache
+local data = util.JSONToTable(bd)
+for i,v in ipairs(data) do
+onMessage(nil,v)
+end
+end,
+method="GET",
+url="http://localhost:3721/getmsg"
+}
+
+end
+timer.Create("TCoreDiscordFetchMsgs",1.5,0,fetchMsgs)
+
+gameevent.Listen("player_connect")
+gameevent.Listen("player_disconnect")
+
+local function onConnect(self)
+    TCore.msg("Discord Relay Connected!")
+    isConnected = true
+end
+
+
 
 local function onErr(self,err)
     TCore.msg("Relay ERR ",err)
 end
-
-function relay:Identify()
-    local tosend = {}
-end
-
-function relay:PrepareHooks()
-    if (self.socket) then
-       self.socket.onDisconnected = onDisconnect
-       self.socket.onConnected = onConnect
-       self.socket.onMessage = onMessage
-    end
-end
-relay:StopConnection()
-relay:StartConnection()
 
 hook.Add("PlayerSay","TCoreDiscordPlayerSay",function(ply,txt,team)
     GetAvatar(ply:SteamID(),function(ret)
@@ -211,12 +205,35 @@ local function prepareEmbed(ply)
 end
 
 hook.Add("TCoreRelayMessage","TCoreRelayCmds",function(msg,author)
-    if string.StartWith(msg,"!") then
-        local cmd = string.sub(msg, 2)
-        if string.StartWith(cmd,"status") then
-        local message = 1
+    for i,v in pairs(commands) do
+        if string.StartWith(msg,"!"..i) then
+            local data = string.sub(msg,string.len("!"..i)+2)
+            local ok,why = pcall(v,author,data)
+            if not ok then
+                relay:SendMessage({content="Command ERR:\n```"..why.."```"})
+            end
+            return true
+        end
+    end
+end)
+
+commands["status"] = function(author,data)
+local message = 1
         local plytabs = {}
 		local amount = player.GetCount()
+        if amount == 0 then
+            relay:SendMessage({content="**Nazwa:** " .. GetHostName() .. "\n**Czas Online:** " .. string.NiceTime(CurTime()) .. "\n**Mapa:** " .. game.GetMap() .. "\n**Gracze:** ".. #player.GetAll() .. "/" .. game.MaxPlayers(),
+                embeds = {
+					[1] = {
+						["title"] = "Status:",
+						["description"] = "Nie ma graczy na serwerze :(...\nChcesz dołączyć? Kliknij ten link: steam://connect/"..game.GetIPAddress(),
+						["type"] = "rich",
+						["color"] = 0x555555
+					}
+				}
+                })
+            return true
+        end
         for i,ply in pairs(player.GetAll()) do
             plytabs[message] = plytabs[message] or {}
             table.insert(plytabs[message],ply)
@@ -241,17 +258,15 @@ hook.Add("TCoreRelayMessage","TCoreRelayCmds",function(msg,author)
                 end)
             end
         end
-        elseif string.StartWith(cmd,"rcon") then
-            if author[3] and (accessCheck(author[3],262158797424820224) or accessCheck(author[3],257532593145118721) ) then
-                local data = string.sub(cmd,6)
+end
+
+
+commands["rcon"] = function(author,data)
+if author[3] and (accessCheck(author[3],262158797424820224) or accessCheck(author[3],257532593145118721) ) then
                 data = string.Split(data," ")
                 RunConsoleCommand(unpack(data))
                 relay:SendMessage({content=":ok_hand:"})
             else
                 relay:SendMessage({content=":lock:"})
             end
-        end
-        return true
-    end
-end)
-]]--DISABLED
+end

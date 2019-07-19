@@ -35,7 +35,7 @@ local fagmins1 ={
 }
 local howMuchFagmins1 = table.Count(fagmins1)
 local fagmins2 ={
-["Młaszter"] = {"76561198053747306"},
+["Yukio77"] = {"76561198151649602"},
 ["Dr.Freezeman"] = {"76561198206103919"},
 ["PawikLord"] = {"76561198177720590"},
 ["DominikPc73"] = {"76561198109040046",50},
