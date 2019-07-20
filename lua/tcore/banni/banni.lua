@@ -24,13 +24,13 @@ if CLIENT then
 
 		if(tbl.banned == true) then
 			table.insert(a, Color(237,67,55))
-			table.insert(a, " banned ")
+			table.insert(a, " dzbanned ")
 			table.insert(a, Color(255,255,255))
 			table.insert(a, sasdsa and sasdsa:Nick() or tbl.steamid)
 			table.insert(a, " until "..os.date("%c", tbl.startedat+tbl.time)..", ")
 		else
 			table.insert(a, Color(75,181,67))
-			table.insert(a, " unbanned ")
+			table.insert(a, " undzbanned ")
 			table.insert(a, Color(255,255,255))
 			table.insert(a, sasdsa and sasdsa:Nick() or tbl.steamid)
 			table.insert(a, ",")
@@ -67,14 +67,26 @@ if CLIENT then
 
 	hook.Add("PrePlayerDraw", tag, function(ply)
 		if ply.banni then
-			render.SetMaterial(Material("debug/debugwhite"))
-			render.SuppressEngineLighting(true)
+			--render.SetMaterial(Material("debug/debugwhite"))
+			--render.SuppressEngineLighting(true)
+			ply.csidemodel = ply.csidemodel or ClientsideModel("models/props_c17/pottery07a.mdl")
+			banni.props = banni.props or {}
+			banni.props[ply] = ply.csidemodel
+			ply.csidemodel:SetPos(ply:GetPos())
+			ply.csidemodel:SetAngles(Angle(0,ply:GetAngles().yaw,0))
+			ply.csidemodel:SetColor(Color(255,255,255,255))
+			return true
 		end
 	end)
 
 	hook.Add("PostPlayerDraw", tag, function(ply)
 		if ply.banni then
-			render.SuppressEngineLighting(false)
+		else
+		if ply.csidemodel then
+					ply.csidemodel:SetColor(Color(255,255,255,0))
+					ply.csidemodel:SetRenderMode(RENDERMODE_TRANSALPHA)
+				end
+		--render.SuppressEngineLighting(false)
 		end
 	end)
 
@@ -326,13 +338,13 @@ elseif SERVER then
 		})
 
 		local ply = player.GetBySteamID(steamid)
-
+		
 		if(ply ~= false) then
 			ply.banni = false
 			ply:SetRunSpeed(400)
 			ply:SetJumpPower(200)
 			ply:SetSuperJumpMultiplier(1.5)
-
+			if ply.csidemodel then ply.csidemodel:Remove() end
 			hook.Run("PlayerLoadout", ply)
 		end
 	end
@@ -344,7 +356,7 @@ function ulx.banni( calling_ply, target_ply, minutes, reason )
     if not reason then reason = "Admin ma zawsze racje" end
     banni.ban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",target_ply:SteamID(),minutes*60,reason)
 end
-local ban = ulx.command( CATEGORY_NAME, "ulx banni", ulx.banni, "!banni", false, false, true )
+local ban = ulx.command( CATEGORY_NAME, "ulx dzban", ulx.banni, "!dzban", false, false, true )
 ban:addParam{ type=ULib.cmds.PlayerArg }
 ban:addParam{ type=ULib.cmds.NumArg, hint="minutes, 0 for perma", ULib.cmds.optional, ULib.cmds.allowTimeString, min=0 }
 ban:addParam{ type=ULib.cmds.StringArg, hint="reason", ULib.cmds.optional, ULib.cmds.takeRestOfLine, completes=ulx.common_kick_reasons }
@@ -358,7 +370,7 @@ function ulx.banniunban( calling_ply, target_ply)
 	banni.unban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",target_ply:SteamID(),"unban")
 end
 
-local banniub = ulx.command( CATEGORY_NAME, "ulx unbanni", ulx.banniunban, "!unbanni", false, false, true )
+local banniub = ulx.command( CATEGORY_NAME, "ulx undzban", ulx.banniunban, "!undzban", false, false, true )
 banniub:addParam{ type=ULib.cmds.PlayerArg }
 banniub:defaultAccess( ULib.ACCESS_ADMIN )
 banniub:help( "UnBans target." )
@@ -368,7 +380,7 @@ function ulx.bannid( calling_ply, target_ply, minutes, reason )
     if not reason then reason = "Admin ma zawsze racje" end
     banni.ban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",target_ply,minutes*60,reason)
 end
-local ban = ulx.command( CATEGORY_NAME, "ulx bannid", ulx.bannid, "!bannid", false, false, true )
+local ban = ulx.command( CATEGORY_NAME, "ulx dzbanid", ulx.bannid, "!dzbanid", false, false, true )
 ban:addParam{ type=ULib.cmds.StringArg }
 ban:addParam{ type=ULib.cmds.NumArg, hint="minutes, 0 for perma", ULib.cmds.optional, ULib.cmds.allowTimeString, min=0 }
 ban:addParam{ type=ULib.cmds.StringArg, hint="reason", ULib.cmds.optional, ULib.cmds.takeRestOfLine, completes=ulx.common_kick_reasons }
@@ -382,7 +394,7 @@ function ulx.bannidunban( calling_ply, target_ply)
 	banni.unban(IsValid(calling_ply) and calling_ply:SteamID() or "Console",target_ply,"unban")
 end
 
-local banniub = ulx.command( CATEGORY_NAME, "ulx unbannid", ulx.bannidunban, "!unbannid", false, false, true )
+local banniub = ulx.command( CATEGORY_NAME, "ulx undzbanid", ulx.bannidunban, "!undzbanid", false, false, true )
 banniub:addParam{ type=ULib.cmds.StringArg }
 banniub:defaultAccess( ULib.ACCESS_ADMIN )
 banniub:help( "UnBans target." )
