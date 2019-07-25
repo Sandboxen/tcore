@@ -23,7 +23,7 @@ local function stringrandom(length)
     return ""
   end
 end
-
+util.AddNetworkString("DiscordMsg")
 local function onMessage(self,msg)
     TCore.msg("Relay Msg ",msg)
     msg = util.JSONToTable(msg)
@@ -33,7 +33,10 @@ local function onMessage(self,msg)
     local hk = hook.Run("TCoreRelayMessage",msg.content,msg.author)
     if !hk then
         --print('bc')
-        BroadcastLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"]] .. data .. [[")]]) -- TEMPORARY
+        net.Start("DiscordMsg")
+        net.WriteString(nick)
+        net.WriteString(txt)
+        net.Broadcast()
     end
 end
 
