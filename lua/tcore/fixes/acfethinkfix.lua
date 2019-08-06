@@ -8,6 +8,10 @@ if CLIENT then
         end
     end
     end)]]--FUCKING MISTAKE
+    --[[lua/autorun/acf_extras.lua:309: attempt to call field 'oldThink' (a nil value)
+  1. oldThink - requested:228
+   2. unknown - lua/autorun/acf_extras.lua:309
+]]
     concommand.Add("acfefix",function()
         for i,v in ipairs(ents.GetAll()) do
         if v.acfe_detected then
@@ -17,4 +21,10 @@ if CLIENT then
         end
     end
     end)
+else
+    hook.Add("ClientLuaError","AcfEFix",function(msg,stack,traceback,ply)
+if(msg == "lua/autorun/acf_extras.lua:309: attempt to call field 'oldThink' (a nil value)") then
+ply:ConCommand("acfefix")
+end
+end)
 end

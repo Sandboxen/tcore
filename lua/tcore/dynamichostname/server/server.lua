@@ -1,5 +1,5 @@
 local hostnames = {
-  --"guwno/guwno/guwno/TS/guwno/guwno/guwno/guwno/guwno",
+  "( ͡° ͜ʖ ͡°)",
   "Masa addonów!",
   "Dla prawdziwych budowniczych!",
   "ACF/E2/SProps/PAC3",
@@ -9,8 +9,8 @@ local hostnames = {
   local activehostname = ""
   local k = 1
   timer.Create("HostnameChanger",5,0,function()
-    game.ConsoleCommand("hostname [PL] Polski Sandbox - "..hostnames[k].."\n")
-    activehostname = "[PL] Polski Sandbox - "..hostnames[k]
+    game.ConsoleCommand("hostname ▅▆▇[PL] Polski Sandbox - "..hostnames[k].."▇▆▅\n")
+    activehostname = "▅▆▇[PL] Polski Sandbox - "..hostnames[k].."▇▆▅"
     net.Start("HostnameChangerSync")
     net.WriteString(activehostname)
     net.Broadcast()

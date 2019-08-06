@@ -1,7 +1,7 @@
 if SERVER then
   local prondsays = {}
       local spammers = {}
-timer.Create("LoadTasks",5,1,function()
+timer.Simple(5,function()
 TCore.msg("Loaded Tasks")
 PCTasks.Add("Pierwszy Raz","Dołącz po raz pierwszy na serwer!")
 PCTasks.Add("Szybszy Niż Światło","Newton nie miał racji.")
@@ -91,7 +91,7 @@ hook.Add("Move","pc_task_faster_than_light",function(ply)
         end
       end
     end)
-    hook.Add("ClientLuaError","erroachieve",function( ply)
+    hook.Add("ClientLuaError","erroachieve",function(_,_,_,ply)
       PCTasks.Complete(ply,"Error")
     end)
     hook.Add("Tick","pingachive",function()
@@ -210,8 +210,8 @@ if CLIENT then
   end
   hook.Add("OnPCTaskCompleted","pctasks",function(ply,task)
       chat.AddText(ply,Color(200,200,200)," zdobył osiągnięcie [",Color(244, 167, 66),task,Color(200,200,200),"]")
-    if ply == LocalPlayer() then
-      --sendAchievement(task,PCTasks.Store[task].desc)
+    if ply == LocalPlayer() and PCTasks.Store and PCTasks.Store[task] then
+      sendAchievement(task,PCTasks.Store[task].desc)
     end
   end)
   surface.CreateFont("AchievementName",{

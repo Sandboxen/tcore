@@ -1,6 +1,9 @@
 local wasLag = false
 hook.Add( "LagDetectorDetected", "MyLagDetectorDetected", function() 
 wasLag = true
+for i,v in ipairs(player.GetAll()) do
+    PCTasks.Complete(v,"ADMIN LAGIII!")
+end
 BroadcastLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Wykryto Laga! Zamrażam Wszystkie Propy!")]])
 for i,v in ipairs(ents.GetAll()) do
     local obj = v:GetPhysicsObject()

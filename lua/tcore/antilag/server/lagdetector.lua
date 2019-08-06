@@ -55,7 +55,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
-local lagrange = CreateConVar( "lagdet_range", "0.07", { FCVAR_SERVER_CAN_EXECUTE } )
+local lagrange = CreateConVar( "lagdet_range", "0.2", { FCVAR_SERVER_CAN_EXECUTE } )
 local lagcount = CreateConVar( "lagdet_count", "5", { FCVAR_SERVER_CAN_EXECUTE } )
 local lagquiet = CreateConVar( "lagdet_quiet", "15", { FCVAR_SERVER_CAN_EXECUTE } )
 local lagverbose = CreateConVar( "lagdet_verbose", "0", { FCVAR_SERVER_CAN_EXECUTE } )

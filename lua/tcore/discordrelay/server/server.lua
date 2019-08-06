@@ -309,6 +309,7 @@ if txt == "!dislink" then
         timer.Simple(15,function()
         codes[ply] = nil
         end)
+    else
         ply:SendLua([[chat.AddText(Color(114,137,218,255), "[Discord] ",Color(255,255,255,255),"Już połączyłeś konto! (]]..ply:DiscordID()..[[)")]])
     end
     return ""

@@ -86,15 +86,3 @@ hook.Add("InitPostEntity", "sandbox_modifications", function()
 
 	hook.Remove("InitPostEntity", "sandbox_modifications")
 end)
-
-if CLIENT then
-LocalPlayer():ConCommand("gmod_mcore_test 1")
-LocalPlayer():ConCommand("mat_queue_mode -1")
-LocalPlayer():ConCommand("cl_threaded_bone_setup 1")
-LocalPlayer():ConCommand("cl_threaded_client_leaf_system 1")
-LocalPlayer():ConCommand("r_threaded_particles 1")
-LocalPlayer():ConCommand("r_threaded_renderables 1")
-LocalPlayer():ConCommand("r_queued_ropes 1")
-LocalPlayer():ConCommand("studio_queue_mode 1")
-LocalPlayer():ConCommand("mat_specular 0")
-end

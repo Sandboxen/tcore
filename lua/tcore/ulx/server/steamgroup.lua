@@ -26,7 +26,10 @@ STEAMTEAM.Groups[1] = {}
 STEAMTEAM.Groups[1].URL = "http://steamcommunity.com/groups/polskisandbox"
 -- A configurable callback. In this example, I set a networked boolean if the user is a member of the above group.
 -- I'm using this in other areas - for example, a custom icon in HatsChat
-STEAMTEAM.Groups[1].OnIsMember = function(self, ply) if ply:GetUserGroup() == "user" then ulx.adduser(ply,ply,"bywalec") end end
+STEAMTEAM.Groups[1].OnIsMember = function(self, ply) 
+if ply:GetUserGroup() == "user" then ulx.adduser(ply,ply,"bywalec") end 
+if PCTasks then PCTasks.Complete(ply,"W Grupie raźniej") end
+end
 STEAMTEAM.Groups[1].Bonus = {}
 
 -- One bonus for now

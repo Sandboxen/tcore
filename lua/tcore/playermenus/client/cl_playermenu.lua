@@ -225,10 +225,11 @@ esc.openMenu = function()
 
 	local lblName = Label(LocalPlayer():Name(), header)
 	lblName:SetFont('esc_name_font')
+	lblName:SetTextColor(color_white)
 	lblName:SizeToContents()
 	lblName:Center()
 
-	local body = vgui.Create('DPanel', panel)
+	local body = vgui.Create('DScrollPanel', panel)
 	body:SetPos(0, header:GetTall() + 4)
 	body:SetSize(w, h - header:GetTall() - 8)
 	--[[local icon = vgui.Create( "DModelPanel", body )
@@ -259,6 +260,38 @@ esc.openMenu = function()
 		btn:SetTextColor(color_white)
 		btn:SetText(text)
 		btn:DockMargin(4,2,4,2)
+		btn:Dock(TOP)
+		btn.action = action
+		function btn:OnCursorEntered()
+			self:SetTextColor(color_black)
+		end
+		function btn:OnCursorExited()
+			self:SetTextColor(color_white)
+		end
+		function btn:Paint(w,h)
+			if self:IsHovered() then
+				surface.SetDrawColor(200,200,200,110)
+				surface.DrawRect(0,0,w,h)
+			else
+				surface.SetDrawColor(0,0,0,150)
+				surface.DrawRect(0,0,w,h)
+			end
+		end
+		btn.DoClick = action
+		return btn
+	end
+	local function addConButton(parent, text, convar)
+		local mconvar = GetConVar(convar)
+		local btn = vgui.Create('DButton', parent)
+		btn:SetSize(parent:GetWide(), 33)
+		btn:SetFont 'esc_btn_font'
+		btn:SetTextColor(color_white)
+		btn:SetText("["..(mconvar:GetBool() and "ON" or "OFF").."] "..text)
+		btn:DockMargin(4,2,4,2)
+		local action = function()
+		LocalPlayer():ConCommand(convar.." "..(mconvar:GetBool() and "0" or "1"))
+		btn:SetText("["..(mconvar:GetBool() and "OFF" or "ON").."] "..text)
+		end
 		btn:Dock(TOP)
 		btn.action = action
 		function btn:OnCursorEntered()
@@ -435,7 +468,34 @@ esc.openMenu = function()
 		addButton(mainopts,"Tryb Budowania",function() LocalPlayer():ConCommand('ulx build\n') playermenupanel:Remove() end)
 	end
 	addButton(mainopts,"Edycja HUDu",function() LocalPlayer():ConCommand('phud_edit\n') playermenupanel:Remove() end)
-	addButton(mainopts, "Pomoc",function() LocalPlayer():ConCommand("say !pomoc\n") playermenupanel:Remove() end)
+	addButton(mainopts,"PAC3 Ignore",PacIgnoreList)
+	addButton(mainopts,"Wincyj FPS (moze scrashowac gre)",function()
+	RunConsoleCommand("gmod_mcore_test",1)
+	RunConsoleCommand("mat_queue_mode",-1)
+	RunConsoleCommand("cl_threaded_bone_setup", 1)
+	RunConsoleCommand("cl_threaded_client_leaf_system",1)
+	RunConsoleCommand("r_threaded_particles",1)
+	RunConsoleCommand("r_threaded_renderables",1)
+	RunConsoleCommand("r_queued_ropes",1)
+	RunConsoleCommand("studio_queue_mode",1)
+	RunConsoleCommand("mat_specular",0)
+	end)
+	local settings = addSection(body,"Ustawienia")
+	local convars = {
+		["toolgun_compass_enabled"] = "Kompas w toolgunie",
+		["toolgun_black"] = "Czarny ekran toolguna",
+		["chatsounds_enabled"] = "ChatSoundy",
+		["name_tags"]="Nametagi",
+		["entity_info"]="Informacje o propach",
+		--["gmod_mcore_test"] = "Renderowanie Wielordzeniowe",
+		["dnd_enable"]="Nie przeszkadzac"
+	}
+	for i,v in pairs(convars) do
+	if not GetConVar(i) then return end
+	local butt = addConButton(settings,v,i)
+	--addAltText(butt,i)
+	end
+	--addButton(mainopts, "Pomoc",function() LocalPlayer():ConCommand("say !pomoc\n") playermenupanel:Remove() end)
 	--[[local serverList = addSection(body, 'SERVERS')
 	local function addServerButton(name, ip)
 		addConfirm(addAltText(addButton(serverList, name, function()
@@ -462,11 +522,11 @@ esc.openMenu = function()
 	addButton(body, 'OPTIONS', function() gui.ActivateGameUI() panel:Remove() end):Dock(BOTTOM)]]
 end
 
-
+local data = CreateClientConVar("plymenu_enable","1")
 local timeout = 0
 hook.Add("PlayerButtonDown","BindMenuPlayer",function(ply,s)
 	if not IsValid(ply) then return end
-if s == KEY_F3 and ply == LocalPlayer() and CurTime() > timeout then
+if s == KEY_F3 and ply == LocalPlayer() and CurTime() > timeout and data:GetBool() then
 timeout = CurTime()+0.5
 LocalPlayer():ConCommand("tomke_player_menu")
 end
