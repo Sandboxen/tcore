@@ -109,7 +109,8 @@ hook.Add("PostDrawTranslucentRenderables", tag, function()
 
 				local txt = ply:Nick()
 				DrawText(ply:Nick(), tag, 0, team.GetColor(ply:Team()))
-				DrawText(ply:GetNWString('title'), tag .. "3", 1.3, Color(80, 80, 80))
+				local titlecolor = ply:GetNWVector("titlecol", Vector(80,80,80))
+				DrawText(ply:GetNWString('title'), tag .. "3", 1.3, Color(titlecolor.x,titlecolor.y,titlecolor.z))
 				if ply.IsAFK and ply:IsAFK() then
 					local AFKTime = math.max(0, ply:GetAFKTime())
 					local h = math.floor(AFKTime / 60 / 60)
