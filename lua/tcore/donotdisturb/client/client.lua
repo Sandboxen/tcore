@@ -3,7 +3,7 @@ concommand.Add("dnd_whitelist",function()
     net.SendToServer()
 end)
 
-local dnd = CreateConVar("dnd_enable","0",FCVAR_USERINFO )
+local dnd = CreateClientConVar("dnd_enable","0",true,true,"Nie przeszkadzac")
 
 --[[cvars.AddChangeCallback("dnd_enable",function()
     net.Start("DoNotDisturb")

@@ -78,6 +78,9 @@ if CLIENT then
 			return true
 		end
 	end)
+	hook.Add("PlayerDisconnect","removeDzban",function(ply)
+		if ply.csidemodel then ply.csidemodel:Remove() end
+	end)
 
 	hook.Add("PostPlayerDraw", tag, function(ply)
 		if ply.banni then

@@ -86,3 +86,13 @@ hook.Add("InitPostEntity", "sandbox_modifications", function()
 
 	hook.Remove("InitPostEntity", "sandbox_modifications")
 end)
+if SERVER then
+hook.Add( "PreGamemodeLoaded", "widgets_disabler_cpu", function()
+	MsgN( "Disabling widgets..." )
+	function widgets.PlayerTick()
+		-- empty
+	end
+	hook.Remove( "PlayerTick", "TickWidgets" )
+	MsgN( "Widgets disabled!" )
+end )
+end

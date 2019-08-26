@@ -40,5 +40,17 @@ local tcleanup = ulx.command( "Utility", "ulx tcleanup", ulx.tcleanup, "!tcleanu
 tcleanup:defaultAccess( ULib.ACCESS_ADMIN )
 tcleanup:help( "Cleanup" )
 end)
-
+if SERVER then
+game.OldConsoleCommand = game.OldConsoleCommand or game.ConsoleCommand
+function game.ConsoleCommand(str)
+    if string.StartWith(str,"changelevel") then
+    startCountdown("Zmiana Mapy na "..string.sub(str,13),60,function()
+    game.OldConsoleCommand(str)
+    end)
+    else
+    game.OldConsoleCommand(str)
+    end
+end
+ULib.consoleCommand = game.ConsoleCommand
+end
 hook.GetTable().ULXLoaded.tcoreload()

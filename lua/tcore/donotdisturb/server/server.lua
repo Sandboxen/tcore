@@ -56,7 +56,7 @@ end)
 ulx.oldgoto = ulx.oldgoto or ulx.goto
 function ulx.goto(c,t)
     --print(c,t)
-    if t:GetDNDAccess(c) or c:IsSuperAdmin() or c:IsAdmin() then
+    if t:GetDNDAccess(c) or c:IsSuperAdmin() or c:IsAdmin() or c:GetUserGroup() == "operator" then
         return ulx.oldgoto(c,t)
     else
         c:SendLua([[chat.AddText(Color(255,0,0),"[SERVER] ",Color(255,255,255),"Gracz ma włączone DND!")]])

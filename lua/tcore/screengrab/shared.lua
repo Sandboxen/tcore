@@ -398,9 +398,9 @@ if CLIENT then
 		end	
 		
 		close.OnMouseReleased = function()
-			if not LocalPlayer().InProgress then
+			--if not LocalPlayer().InProgress then
 				main:Close()
-			end
+			--end
 		end	
 		
 		main.OnClose = function()

@@ -70,9 +70,11 @@ end
 function shitdraw()
 for k,v in ipairs(texts) do
 if IsValid(v.ply) then
-local w,h = surface.GetTextSize(table.concat( string.wrapwords(v.text,500,"ChatFont"),"\n"))
-local ply = v.ply
 surface.SetFont("ChatFont")
+local words = string.wrapwords(v.text,500,"ChatFont")
+local txt = table.concat( words,"\n")
+local w,h = surface.GetTextSize(txt)
+local ply = v.ply
 if v.move == true then
 v.pos = FindHeadPos(ply)
 v.ang = select(2,FindHeadPos(ply))
@@ -92,9 +94,10 @@ surface.SetDrawColor(Color(30,30,30,250 * (v.alpha / 255)))
 surface.DrawRect(0-w / 2,0,w + 10,h + 10)
 surface.SetDrawColor(66,66,66,240 * v.alpha / 255)
 surface.DrawOutlinedRect(0-w / 2,0,w + 10,h + 10)
-for i,wrap in ipairs( string.wrapwords(v.text,500,"ChatFont")) do
+for i,wrap in ipairs(words) do
+surface.SetFont("ChatFont")
 local _,lh = surface.GetTextSize(wrap)
-surface.SetTextPos(5-w / 2,5 + (i-1) * lh / 1.22)
+surface.SetTextPos(5-w / 2,5 + (i-1) * lh)
 surface.DrawText(wrap)
 end
 cam.End3D2D()

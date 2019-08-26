@@ -41,6 +41,7 @@ hook.Add("Move","pc_task_faster_than_light",function(ply)
     if ply:GetVelocity():Length() >= 2000 then
         PCTasks.Complete(ply,"Szybszy Niż Światło")
     end
+end)
     hook.Add("PlayerDeath","pc_task_otherworld",function(ply,_,ent)
       PCTasks.Complete(ply,"KAMPER !!")
       if ent:IsPlayer() and ent ~= ply then
@@ -146,8 +147,8 @@ hook.Add("PlayerSwitchFlashlight", "flashlight-spam", function(ply, enabled)
 		end
 	end
 end)
-end)
 end
+
 if CLIENT then
   local prettytext = trequire("pretty_text")
 

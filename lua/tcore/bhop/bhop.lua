@@ -95,5 +95,5 @@ end
 
 if SERVER then
 	RunConsoleCommand("sv_airaccelerate", "1000000")
-	RunConsoleCommand("sv_maxvelocity", "20000")
+	--RunConsoleCommand("sv_maxvelocity", "20000")
 end

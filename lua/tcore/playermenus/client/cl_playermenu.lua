@@ -202,7 +202,7 @@ esc.openMenu = function()
 	local header = vgui.Create('DPanel', panel)
 	header.Paint = function(_, w, h)
 		--panelPaintBlur(w,h)
-		surface.SetDrawColor(33,150,243,255)
+		surface.SetDrawColor(PHUD and PHUD.outlinecolor or Color(33,150,243,255))
 		surface.DrawRect(0,0,w,h)
 		surface.SetDrawColor(0,0,0,255)
 		surface.DrawOutlinedRect(0,0,w,h)
@@ -469,6 +469,9 @@ esc.openMenu = function()
 	end
 	addButton(mainopts,"Edycja HUDu",function() LocalPlayer():ConCommand('phud_edit\n') playermenupanel:Remove() end)
 	addButton(mainopts,"PAC3 Ignore",PacIgnoreList)
+	addButton(mainopts,"Lista Addonow",function()
+	RunConsoleCommand("ulx","addony")
+	end)
 	addButton(mainopts,"Wincyj FPS (moze scrashowac gre)",function()
 	RunConsoleCommand("gmod_mcore_test", "1")
 	RunConsoleCommand("mat_queue_mode", "-1")
@@ -489,7 +492,8 @@ esc.openMenu = function()
 		["name_tags"]="Nametagi",
 		["entity_info"]="Informacje o propach",
 		--["gmod_mcore_test"] = "Renderowanie Wielordzeniowe",
-		["dnd_enable"]="Nie przeszkadzac"
+		["dnd_enable"]="Nie przeszkadzac",
+		["chat_prefixes_enable"]="Pokazuj tagi na chacie"
 	}
 	for i,v in pairs(convars) do
 	if not GetConVar(i) then return end

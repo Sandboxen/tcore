@@ -1,4 +1,4 @@
-hook.Add("Think","UpdateWeightVar",function()
+--[[hook.Add("Think","UpdateWeightVar",function()
     for i,v in ipairs(ents.GetAll()) do
         if IsValid(v) then
             local physobj = v:GetPhysicsObject()
@@ -7,4 +7,5 @@ hook.Add("Think","UpdateWeightVar",function()
             end
         end 
     end
-end)
+end)]]--LAGGY AF
+--hook.Remove("Think","UpdateWeightVar")

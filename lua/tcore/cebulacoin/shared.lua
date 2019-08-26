@@ -1,7 +1,7 @@
 cebulacoin = cebulacoin or {}
 local plyMeta = FindMetaTable("Player")
 function plyMeta:GetMoney()
-return self:GetNWString("cebulacoin",0)
+return tonumber(self:GetNWString("cebulacoin",0))
 end
 
 local charset = {}
@@ -22,22 +22,42 @@ if SERVER then
 
 function plyMeta:AddMoney(much)
 local money = self:GetNWString("cebulacoin",0)
+much = math.floor(much)
 if much >= 0 then
-self:SendLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś ",Color(255,0,0),"]]..much..[[$")]])
+self:SendLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś ",Color(255,0,0),"]]..math.abs(much)..[[$")]])
 else
 self:SendLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Straciłeś ",Color(255,0,0),"]]..math.abs(much)..[[$")]])
 end
 self:SetNWString("cebulacoin",money+much)
+self:SetPData("cebulacoin",self:GetMoney())
+end
+
+function plyMeta:GiveMoneyTo(who,much)
+much = math.floor(math.abs(much))
+if much > 0 and IsValid(who) then
+self:AddMoney(-much)
+who:AddMoney(much)
+chat.AddText(who,Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś ",Color(255,0,0),much,"$ ",Color(230,230,230),"od ",Color(255,0,0),self:Name(),Color(230,230,230),"!")
+chat.AddText(self,Color(128,0,255),"[SERVER]",Color(230,230,230)," Dałeś ",Color(255,0,0),much,"$ ",Color(230,230,230),"dla ",Color(255,0,0),who:Name(),Color(230,230,230),"!")
+end
 end
 
 function plyMeta:SetMoney(much)
-self:SetNWString("cebulacoin",much)
+self:SetNWString("cebulacoin",math.floor(much))
 end
     util.AddNetworkString("CebulaCoinEventSet")
     util.AddNetworkString("CebulaCoinDrop")
+    util.AddNetworkString("CebulaCoinGive")
+    net.Receive("CebulaCoinGive",function(_,ply)
+    print(ply)
+    local much = tonumber(net.ReadString())
+    much = math.floor(much)
+    local who = net.ReadEntity()
+    ply:GiveMoneyTo(who,much)
+    end)
     net.Receive("CebulaCoinDrop",function(_,ply)
     local much = tonumber(net.ReadString())
-    much = math.Clamp(much, 0, ply:GetMoney())
+    much = math.Clamp(much, 0, tonumber(ply:GetMoney()))
     if tonumber(ply:GetMoney()) >= tonumber(much) then
         local coin = ents.Create("coin")
         print(coin)
@@ -143,9 +163,37 @@ else
     end)
     concommand.Add("dropcoins",function(ply,cmd,args)
     local much = tonumber(args[1]) or 0
-    much = math.Clamp(much, 0, ply:GetMoney())
+    much = math.floor(much)
+    much = math.Clamp(much, 0, tonumber(ply:GetMoney()))
     net.Start("CebulaCoinDrop")
     net.WriteString(tostring(math.abs(much)))
     net.SendToServer()
+    end)
+    local function findply(data)
+        for i,v in ipairs(player.GetAll()) do
+            if v:Nick():lower() == data:lower() then
+                return v
+            end
+        end
+    end
+    concommand.Add("givecoins",function(ply,cmd,args)
+    local much = tonumber(args[2]) or 0
+    local who = findply(args[1])
+    if not who then 
+    chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Nie znaleziono gracza o takim nicku!")
+    return
+    end
+    much = math.floor(much)
+    much = math.Clamp(much, 0, tonumber(ply:GetMoney()))
+    net.Start("CebulaCoinGive")
+    net.WriteString(tostring(math.abs(much)))
+    net.WriteEntity(who)
+    net.SendToServer()
+    end,function(cmd)
+        local tbl = {}
+        for i,v in ipairs(player.GetAll()) do
+        table.insert(tbl,cmd.." "..v:Nick())
+        end
+        return tbl
     end)
 end
