@@ -375,3 +375,90 @@ hook.Add("HUDDrawTargetID","TargetIDOverride",function()
         end
     return false
 end)
+
+function runPapysz()
+local song
+sound.PlayURL("http://ytmp3.tomekb530.me/?id=1dOt_VcbgyA","",function(st)
+if IsValid(st) then
+st:Play()
+song = st
+timer.Simple(60,function()
+st:Stop()
+end)
+end
+end)
+local PapierzDHTML = vgui.Create("DHTML")
+PapierzMat = nil
+
+PapierzDHTML:Dock(FILL)
+PapierzDHTML:SetHTML([[
+	<html>
+	<head>
+	<style>
+	body{
+		width:128px;
+		height:128px;
+		background-image:url(http://janpaweldrugi.wex.pl/rzulta.png);
+		background-repeat: no-repeat;
+		background-size: 128px 128px;
+
+		overflow:hidden;
+	}
+	</style>
+	</head>
+	<body>
+	</body>
+	</html>
+	]])
+PapierzDHTML:SetAlpha(0)
+PapierzDHTML:SetMouseInputEnabled(false)
+local papyrzpos = {}
+local papyrzcol = {}
+local ok = {0,0,0} 
+hook.Add("HUDPaint","Papierz",function()
+	if PapierzMat and song and song:GetTime() > 17 then
+		for i,v in ipairs(papyrzpos) do
+		surface.SetMaterial(PapierzMat)
+		surface.SetDrawColor(Color(255,255,255,255))
+		surface.DrawTexturedRect(v[1]+math.Rand(0,10),v[2]+math.Rand(0,10),512*2,512)
+	end
+  if song:GetTime()>40 then
+    surface.SetFont("CountdownFont")
+    for text=1,3 do
+    local col = papyrzcol[text]
+    local contrast = Color(math.abs(255-col.r),math.abs(255-col.g),math.abs(255-col.b),255)
+    local cw = surface.GetTextSize("Inbaaaa")
+    surface.SetTextColor(contrast)
+    surface.SetTextPos(papyrzpos[text][1],papyrzpos[text][2])
+    surface.DrawText("Inbaaaa")
+    surface.SetTextColor(col)
+    surface.SetTextPos(papyrzpos[text][1],papyrzpos[text][2])
+    surface.DrawText("Inbaaaa")
+    end
+    end
+	elseif PapierzDHTML and PapierzDHTML:GetHTMLMaterial() then
+		local scale_x, scale_y = 1,1
+		local html_mat = PapierzDHTML:GetHTMLMaterial()
+		local matdata =
+		{
+			["$basetexture"]=html_mat:GetName(),
+			["$basetexturetransform"]="center 0 0 scale "..scale_x.." "..scale_y.." rotate 0 translate 0 0",
+			["$model"]=1,
+			["$translucent"]=1,
+		}
+		local uid = string.Replace( html_mat:GetName(), "__vgui_texture_", "" )
+		PapierzMat=CreateMaterial( "WebMaterial_"..uid, "UnlitGeneric", matdata )
+	end
+end)
+timer.Create("Papysz",1/3,0,function()
+	local w, h = ScrW() - 300, ScrH()
+	for i=1,30 do
+		papyrzpos[i] = {math.random(0, w), math.random(0, h)}
+    papyrzcol[i] = Color(math.random(0,255),math.random(0,255),math.random(0,255))
+	end
+end)
+timer.Simple(60,function()
+hook.Remove("HUDPaint","Papierz")
+timer.Remove("Papysz")
+end)
+end

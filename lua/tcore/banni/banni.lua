@@ -4,6 +4,7 @@ banni = {}
 local tag = "banni"
 
 if CLIENT then
+	local dzbany = {}
 	local function emitsound(path,pitch)
 		sound.PlayFile("sound/"..path,"",function(station)
 			station:SetPlaybackRate(pitch)
@@ -70,6 +71,7 @@ if CLIENT then
 			--render.SetMaterial(Material("debug/debugwhite"))
 			--render.SuppressEngineLighting(true)
 			ply.csidemodel = ply.csidemodel or ClientsideModel("models/props_c17/pottery07a.mdl")
+			if not dzbany[ply] then dzbany[ply] = ply.csidemodel end
 			banni.props = banni.props or {}
 			banni.props[ply] = ply.csidemodel
 			ply.csidemodel:SetPos(ply:GetPos())
@@ -107,6 +109,9 @@ if CLIENT then
 				v:SetMaterial( v.origmat )
 				v:SetColor(Color(255,255,255))
 			end
+		end
+		for k,v in pairs(dzbany) do
+			if not IsValid(k) then v:Remove() end
 		end
 	end)
 

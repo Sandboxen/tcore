@@ -3,7 +3,8 @@ local hostnames = {
   "Masa addonów!",
   "Dla prawdziwych budowniczych!",
   "ACF/E2/SProps/PAC3",
-  "Jedyny Taki W Swoim Rodzaju"
+  "Jedyny Taki W Swoim Rodzaju",
+  "WHY U DDOS ME :("
   }
   util.AddNetworkString("HostnameChangerSync")
   local activehostname = ""

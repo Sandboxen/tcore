@@ -7,7 +7,8 @@ local cache = TCore.avCache
 local GetAvatar = TCore.GetAvatar
 local function emptyfunc()
 end
-
+local selfip = string.Split(game.GetIPAddress(),":")
+selfip = selfip[1]
 local charset = {}
 
 -- qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890
@@ -43,9 +44,10 @@ end
 function relay:SendMessage(msg)
     local tosend = msg
     tosend = util.TableToJSON(tosend)
-    http.Post("http://localhost:3721/sendmsg", {data=tosend})
+    http.Post("http://"..selfip..":3721/sendmsg", {data=tosend})
 end
 function fetchMsgs()
+
 local tosend = {
     limit = 3,
     around = around or 0
@@ -59,7 +61,7 @@ onMessage(nil,v)
 end
 end,
 method="GET",
-url="http://localhost:3721/getmsg"
+url="http://"..selfip..":3721/getmsg",
 }
 
 end

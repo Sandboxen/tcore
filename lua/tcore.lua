@@ -290,7 +290,7 @@ TCore.libs = {}
     local files = net.ReadTable()
     for i,v in pairs(files) do
       for _,filename in ipairs(v) do
-       local s = CompileFile(filename)
+       local s = CompileFile(filename,"TCore",false)
        if not s then
         msg("Requesting File And Loading Manually")
         net.Start("TCoreRequestCSFile")
