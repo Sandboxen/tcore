@@ -83,12 +83,6 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 	surface.SetFont("Coolvetica100")
 	local twidth = surface.GetTextSize("24:24:60")
     p:Rect(x,y, x*-2,y*-2,Color(0,32,0), Color(255, 255, 255,255))
-	if chathud:GetTwitchEmoticon("25") then
-	--p:Mat(chathud:GetTwitchEmoticon("25"),900-anim,900-anim,72,72,Color(255,255,255,100))
-	--p:Mat(chathud:GetTwitchEmoticon("25"),x+anim,y+anim,72,72,Color(255,255,255,100))
-	--p:Mat(chathud:GetTwitchEmoticon("25"),900-anim,y+anim,72,72,Color(255,255,255,100))
-	--p:Mat(chathud:GetTwitchEmoticon("25"),x+anim,900-anim,72,72,Color(255,255,255,100))
-	end
 	surface.SetFont("Screens_Roboto100")
 	local hellowidth = surface.GetTextSize("Witaj "..LocalPlayer():Name().."!")
   	p:Text(TimeString, "Coolvetica100", x+150, y+30)
