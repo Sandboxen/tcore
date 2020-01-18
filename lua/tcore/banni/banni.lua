@@ -74,9 +74,11 @@ if CLIENT then
 			if not dzbany[ply] then dzbany[ply] = ply.csidemodel end
 			banni.props = banni.props or {}
 			banni.props[ply] = ply.csidemodel
+			if(IsValid(ply.csidemodel)) then
 			ply.csidemodel:SetPos(ply:GetPos())
 			ply.csidemodel:SetAngles(Angle(0,ply:GetAngles().yaw,0))
 			ply.csidemodel:SetColor(Color(255,255,255,255))
+			end
 			return true
 		end
 	end)

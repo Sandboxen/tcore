@@ -4,6 +4,9 @@ ply:SendLua([[
 HelpSwep.gui()
 ]])
 return ""
+elseif txt=="!jebacdisa" then
+ply:ChatPrint("http://tomekb530.me/jd.html")
+return ""
 elseif txt == "!pacignore" then
 ply:SendLua([[
 PacIgnoreList()
@@ -37,9 +40,7 @@ elseif txt == "!build" then
  ply:ConCommand("cl_godmode 1")
  ply:SendLua([[chat.AddText(Color(255,0,0),"[INFO]",Color(255,255,255,255)," Włączono tryb build.")]])
  return ""
- elseif txt == "!discord" then
-  ply:SendLua([[gui.OpenURL("http://discord.gg/KYsFP4b")]])
- return ""
+ 
 end
 end
 )

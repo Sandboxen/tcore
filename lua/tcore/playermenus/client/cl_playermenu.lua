@@ -18,7 +18,7 @@ local function openPlayerMenu()
 if IsValid(playermenupanel) then
 	playermenupanel:Remove()
 else
-		esc.openMenu()
+		plyMenu.openMenu()
 end
 end
 
@@ -29,7 +29,7 @@ concommand.Add("tomke_player_menu",openPlayerMenu)
 -- All derivitave scripts must keep this credit banner to the author and must credit the author thelastpenguin in any releases
 -- other than that you can do whatever the fvck you want with it :)
 --
-esc = esc or {}
+plyMenu = plyMenu or {}
 
 local render, surface = _G.render, _G.surface
 
@@ -147,7 +147,7 @@ surface.CreateFont('esc_name_font', {
 })
 
 
-esc.openMenu = function()
+plyMenu.openMenu = function()
 	--gui.EnableScreenClicker(true)
 
 	playermenupanel = vgui.Create('DPanel')
@@ -472,6 +472,9 @@ esc.openMenu = function()
 	addButton(mainopts,"Lista Addonow",function()
 	RunConsoleCommand("ulx","addony")
 	end)
+	addButton(mainopts,"Lista Emotek",function()
+	RunConsoleCommand("emotes_list")
+	end)
 	addButton(mainopts,"Wincyj FPS (moze scrashowac gre)",function()
 	RunConsoleCommand("gmod_mcore_test", "1")
 	RunConsoleCommand("mat_queue_mode", "-1")
@@ -493,12 +496,14 @@ esc.openMenu = function()
 		["entity_info"]="Informacje o propach",
 		--["gmod_mcore_test"] = "Renderowanie Wielordzeniowe",
 		["dnd_enable"]="Nie przeszkadzac",
-		["chat_prefixes_enable"]="Pokazuj tagi na chacie"
+		["chat_prefixes_enable"]="Pokazuj tagi na chacie",
+		["cl_enable_esc_menu"]="Customowe ESC menu"
 	}
 	for i,v in pairs(convars) do
-	if not GetConVar(i) then return end
+	if GetConVar(i) then 
 	local butt = addConButton(settings,v,i)
 	--addAltText(butt,i)
+	end
 	end
 	--addButton(mainopts, "Pomoc",function() LocalPlayer():ConCommand("say !pomoc\n") playermenupanel:Remove() end)
 	--[[local serverList = addSection(body, 'SERVERS')

@@ -123,7 +123,7 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 	end
 	k=0
 	p:Text("Znajdujesz sie na serwerze Polski Sandbox","Screens_Roboto100",-300,-500)
-	p:Text("Uptime: "..os.date("%H:%M:%S",CurTime()),-300,-600)
+	p:Text("Uptime: "..os.date("%H:%M:%S",CurTime()),"Screens_Roboto100",-1000,600)
 	p:Text("Wlasciciel :","Screens_Roboto70",(450/2),-260)
 	if p:Button("","Screens_Roboto1",(450/2),-150,300,300,Color(0,0,0,0),Color(0,0,0,0)) then
 		gui.OLDOpenURL("http://steamcommunity.com/profiles/76561198235918302")
