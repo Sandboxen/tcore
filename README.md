@@ -4,5 +4,3 @@ Additional Code Used
 
 some code from http://github.com/Re-Dream
 some code from http://github.com/PAC3-Server
-
-To the person named Exotic: "smierdzisz"
