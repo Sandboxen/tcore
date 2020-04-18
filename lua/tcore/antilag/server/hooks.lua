@@ -18,12 +18,12 @@ local pplents = {}
 for i,v in ipairs(ents.GetAll()) do
     if IsValid(v) and v.CPPIGetOwner and v:CPPIGetOwner() then
     local owner = v:CPPIGetOwner()
-    if not IsValid(v:GetParent()) then
+    --if not IsValid(v:GetParent()) then
     ppl[owner] = ppl[owner] or 0
     ppl[owner] = ppl[owner] + 1
     pplents[owner] = pplents[owner] or {}
     table.insert(pplents[owner],v)
-    end
+    --end
     end
 end
 timer.Simple(0.3,function()
@@ -34,7 +34,7 @@ for i,v in pairs(ppl) do
     end
 end
 timer.Simple(0.3,function()
-BroadcastLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Najwięcej propów zrespił: <hsv=[tick()*2],1,1>]].. winner:Nick() .."</hsv> ["..ppl[winner].."] "..[[")]])
+BroadcastLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Najwięcej propów zrespił: <hsv=[tick()*2],1,1>]].. winner:Nick() .." ["..ppl[winner].."] "..[[")]])
 --[[BroadcastLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Powiadomiono Administrację!")]]--[[)
 local relay = TCore.discordrelay
 local nick = winner:Nick()
@@ -48,7 +48,7 @@ local embeds = {
             author = {
                 name = nick,
                 url = "http://steamcommunity.com/profiles/" .. util.SteamIDTo64(sid),
-                icon_url = ret
+                icon_url = ret 
             }
     },
     [2] = {

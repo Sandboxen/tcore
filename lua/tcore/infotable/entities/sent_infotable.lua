@@ -35,9 +35,9 @@ local fagmins1 ={
 }
 local howMuchFagmins1 = table.Count(fagmins1)
 local fagmins2 ={
-["Yukio77"] = {"76561198151649602"},
-["Dr.Freezeman"] = {"76561198206103919"},
-["PawikLord"] = {"76561198177720590"},
+["r0nii"] = {"76561198119197768"},
+["troche"] = {"76561198225706808",30},
+["yo_bonez"] = {"76561198199790238"},
 ["DominikPc73"] = {"76561198109040046",50},
 }
 
@@ -123,9 +123,7 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 		end
 	p:Text("Tomekb530","Screens_Roboto50",-800+(450/2),-200,HSVToColor(Rainbow*2,1,1))
 	p:Rect(50,-150,700,1150,Color(0,0,0,0),Color(150,0,0),5)
-	if chathud:GetDiscordEmoticon("1F600") then
-	p:Mat(chathud:GetDiscordEmoticon("1F600"),0+10+hellowidth/2,0-580,72,72)
-	end
+	
 	if p:Button("Addony","Screens_Roboto100",-950,450,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
 		LocalPlayer():ConCommand("ulx addony")
 		cooldown = CurTime()+3

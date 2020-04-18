@@ -1,4 +1,4 @@
-hook.Add("Think","Pac3MorphCompat",function()
+--[[hook.Add("Think","Pac3MorphCompat",function()
     for i,v in ipairs(ents.GetAll()) do
         if v:GetClass() == "pill_ent_costume" then
             if not IsValid(v) then return end
@@ -9,5 +9,6 @@ hook.Add("Think","Pac3MorphCompat",function()
             end
         end
     end
-end)
+end)]]--NO MORE USED
+hook.Remove("Think","Pac3MorphCompat")
 

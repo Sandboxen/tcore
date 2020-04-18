@@ -29,22 +29,31 @@ sitestoremove[#sitestoremove + i] = v:upper()
 end
 meta.OldNick = meta.OldNick or meta.Nick
 function meta:Nick( b_realnick )
-	if b_realnick then
+--[[	if b_realnick then
 		local nick = self:OldNick()
 		return nick
 	else
 		if IsValid(self) then
 			local nick = self:OldNick()
 			if self:GetNWString("fake_name","") != "" then
-			nick = self:GetNWString("fake_name","")
+				nick = self:GetNWString("fake_name","")
 			end
+
 			if not nick then nick = self:OldNick() end
+
 			for i,v in ipairs(sitestoremove) do
 				nick = string.Replace(nick,v,"")
 			end
+			for i,v in ipairs(player.GetAll()) do
+				if(v:RealNick() == nick) then nick = self:OldNick() end
+			end
 			return nick
 		end
-	end
+	end]]
+return self:OldNick()
 end
 meta.Name = meta.Nick
 meta.GetName = meta.Nick
+function meta:RealNick()
+	return self:Nick(true)
+end

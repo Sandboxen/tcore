@@ -2,8 +2,8 @@ local tag = "PolskiHUD"
 PHUD = {}
 PHUD.posx,PHUD.posy = 150,150
 PHUD.screenposx,PHUD.screenposy = 0,ScrH()-300
-PHUD.scale = 1
-PHUD.enabled = CreateClientConVar("phud_enabled","1")
+PHUD.scale = 0.4
+PHUD.enabled = CreateClientConVar("phud_enabled","0")
 PHUD.maincolor = Color(200,0,20,255)
 PHUD.outlinecolor = Color(0,100,0,200)
 PHUD.armorcolor = Color(127,127,127,255)
@@ -44,7 +44,7 @@ local chudhide = {
 }
 
 hook.Add("HUDShouldDraw",tag,function(s)
-if chudhide[s] and PHUD.enabled:GetBool() then return false end
+--if chudhide[s] and PHUD.enabled:GetBool() then return false end
 end)
 
 local function doHook()
@@ -65,6 +65,7 @@ PHUD.screenposy = sets[7]
 hook.Add("HUDPaint",tag,function()
 local scrw, scrh = ScrW(), ScrH()
 --if not LocalPlayer():IsTomek() then return end
+if true then return end-- disable for now
 if not PHUD.enabled:GetBool() then return end
 if pk_pills and IsValid(pk_pills.getMappedEnt(LocalPlayer())) then return end
 if LocalPlayer() then
@@ -378,7 +379,7 @@ end)
 
 function runPapysz()
 local song
-sound.PlayURL("http://ytmp3.tomekb530.me/?id=1dOt_VcbgyA","",function(st)
+sound.PlayURL("http://ytmp3.tomekb530.me/convert?id=https://www.youtube.com/watch?v=1dOt_VcbgyA","",function(st)
 if IsValid(st) then
 st:Play()
 song = st

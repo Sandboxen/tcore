@@ -99,14 +99,14 @@ if CLIENT then
 
 	hook.Add("Think", tag, function()
 		for k,v in pairs(player.GetAll()) do
+			if (v.banni == true and v.buildmode != false) then
+				v.buildmode = false
+				v:SetNWBool("_Kyle_Buildmode",false)
+			end
 			if(v.banni == true and v:GetColor() ~= Color(255,0,0)) then
 				v.origmat = v:GetMaterial()
 				v:SetMaterial( "models/debug/debugwhite" )
 				v:SetColor(Color(255,0,0))
-				if v.buildmode != false then
-				v.buildmode = false
-				v:SetNWBool("_Kyle_Buildmode",false)
-				end
 			elseif v.banni == false and v:GetColor() ~= Color(255,255,255) then
 				v:SetMaterial( v.origmat )
 				v:SetColor(Color(255,255,255))
@@ -141,6 +141,10 @@ elseif SERVER then
 
 	hook.Add( "SetupMove", "jooj", function( ply, mvd, cmd )
 		if(ply.banni) then
+		if ( ply.buildmode != false) then
+				ply.buildmode = false
+				ply:SetNWBool("_Kyle_Buildmode",false)
+			end
 			if mvd:KeyDown( IN_JUMP ) then
 				mvd:RemoveKeys( IN_JUMP )
 			end
