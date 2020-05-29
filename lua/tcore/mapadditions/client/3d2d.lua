@@ -1,12 +1,118 @@
 local doors = TCore.doors
-surface.CreateFont("Coolvetica50",{
-    font = "Coolvetica",
-    size = 50
+local function addFont(font, t)
+		for i = 1, 100 do
+			t.size = i
+			surface.CreateFont(font .. i, t)
+		end
+end
+
+--MOVE THIS OK
+
+-- Default textscreens font
+addFont("Coolvetica outlined", {
+	font = "coolvetica",
+	weight = 400,
+	antialias = false,
+	outline = true
 })
-surface.CreateFont("Coolvetica100",{
-    font = "Coolvetica",
-    size = 50
+
+addFont("Coolvetica", {
+	font = "coolvetica",
+	weight = 400,
+	antialias = false,
+	outline = false
 })
+
+-- Trebuchet
+addFont("Screens_Trebuchet outlined", {
+	font = "Trebuchet MS",
+	weight = 400,
+	antialias = false,
+	outline = true
+})
+
+addFont("Screens_Trebuchet", {
+	font = "Trebuchet MS",
+	weight = 400,
+	antialias = false,
+	outline = false
+})
+
+-- Arial
+addFont("Screens_Arial outlined", {
+	font = "Arial",
+	weight = 600,
+	antialias = false,
+	outline = true
+})
+
+addFont("Screens_Arial", {
+	font = "Arial",
+	weight = 600,
+	antialias = false,
+	outline = false
+})
+
+-- Roboto Bk
+addFont("Screens_Roboto outlined", {
+	font = "Roboto Bk",
+	weight = 400,
+	antialias = false,
+	outline = true
+})
+
+addFont("Screens_Roboto", {
+	font = "Roboto Bk",
+	weight = 400,
+	antialias = false,
+	outline = false
+})
+
+-- Helvetica
+addFont("Screens_Helvetica outlined", {
+	font = "Helvetica",
+	weight = 400,
+	antialias = false,
+	outline = true
+})
+
+addFont("Screens_Helvetica", {
+	font = "Helvetica",
+	weight = 400,
+	antialias = false,
+	outline = false
+})
+
+-- akbar
+addFont("Screens_Akbar outlined", {
+	font = "akbar",
+	weight = 400,
+	antialias = false,
+	outline = true
+})
+
+addFont("Screens_Akbar", {
+	font = "akbar",
+	weight = 400,
+	antialias = false,
+	outline = false
+})
+
+-- csd
+addFont("Screens_csd outlined", {
+	font = "csd",
+	weight = 400,
+	antialias = false,
+	outline = true
+})
+
+addFont("Screens_csd", {
+	font = "csd",
+	weight = 400,
+	antialias = false,
+	outline = false
+})
+
 hook.Add("PostDrawTranslucentRenderables","OverDoorView",function()
 for i,v in ipairs(doors[game.GetMap()] or {}) do
 local finfo = v[1]
