@@ -1,4 +1,8 @@
 local doors = TCore.doors
+surface.CreateFont("Coolvetica50",{
+    font = "Coolvetica",
+    size = 50
+})
 hook.Add("PostDrawTranslucentRenderables","OverDoorView",function()
 for i,v in ipairs(doors[game.GetMap()] or {}) do
 local finfo = v[1]
