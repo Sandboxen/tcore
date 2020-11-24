@@ -1,4 +1,4 @@
-local matScreen = Material( "models/weapons/v_toolgun/screen" )
+--[[local matScreen = Material( "models/weapons/v_toolgun/screen" )
 local txBackground = surface.GetTextureID( "models/weapons/v_toolgun/screen_bg" )
 local testBackground	= surface.GetTextureID( "vgui/alpha-back" )
 local glogo = surface.GetTextureID("vgui/titlebaricon")
@@ -44,10 +44,7 @@ local function DrawScrollingText( text, y, texwide )
 end
 
 
---[[---------------------------------------------------------
-	We use this opportunity to draw to the toolmode
-		screen's rendertarget texture.
------------------------------------------------------------]]
+
 local tcoreoverride = CreateClientConVar("toolgun_compass_enabled", "1")
 local blacktoolgun = CreateClientConVar("toolgun_black","0")
 local function func(self)
@@ -134,4 +131,5 @@ surface.SetFont( "GModToolScreen" )
 DrawScrollingText( "#tool." .. mode .. ".name", 200, TEX_SIZE )
 surface.SetFont( "GModToolScreenHelping" )
 DrawScrollingText( "#tool." .. mode .. ".desc", 235, TEX_SIZE )
-end
+end]]
+

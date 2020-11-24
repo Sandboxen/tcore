@@ -1,17 +1,17 @@
 local hostnames = {
-  "( ͡° ͜ʖ ͡°)",
-  "Masa addonów!",
-  "Dla prawdziwych budowniczych!",
   "ACF/E2/SProps/PAC3",
-  "Jedyny Taki W Swoim Rodzaju",
-  "WHY U DDOS ME :("
+  "Fajna zabawa",
+  "Frajer Pompka Jestes",
+  "D00psko",
+  "Admin chity",
   }
   util.AddNetworkString("HostnameChangerSync")
   local activehostname = ""
   local k = 1
   timer.Create("HostnameChanger",5,0,function()
-    game.ConsoleCommand("hostname ![PL] Polski Sandbox - "..hostnames[k].."\n")
-    activehostname = "![PL] Polski Sandbox - "..hostnames[k]
+    local wojenna = GetGlobalBool("wojenna")
+    game.ConsoleCommand("hostname [PL] Polski Sandbox - "..(wojenna and "Stan Wojenny" or hostnames[k]).."\n")
+    activehostname = "[PL] Polski Sandbox - "..(wojenna and "Stan Wojenny" or hostnames[k])
     net.Start("HostnameChangerSync")
     net.WriteString(activehostname)
     net.Broadcast()

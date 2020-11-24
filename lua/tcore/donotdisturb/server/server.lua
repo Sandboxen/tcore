@@ -28,7 +28,7 @@ end)
 
 net.Receive("WHRemovePerson",function(_,who)
         local list = util.JSONToTable(who:GetPData("dnd_whitelist","[]"))
-        --local name = net.ReadString()
+        local name = net.ReadString()
         local sid = net.ReadString()
         for i,v in pairs(list) do
             if v[2] == sid then
