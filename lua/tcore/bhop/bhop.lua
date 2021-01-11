@@ -49,6 +49,7 @@ local function calc_wall(ply, data)
 end
 
 local function Move(ply, data)
+	if GetGlobalBool("wojenna") then return end
 	local mult = ply:GetSuperJumpMultiplier()
 
 	if ply:KeyPressed(IN_JUMP) and ply:GetMoveType() == MOVETYPE_WALK then

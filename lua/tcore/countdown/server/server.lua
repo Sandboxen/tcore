@@ -37,12 +37,7 @@ local date = (os.date("%H:%M:%S",os.time()))
 if date == "21:36:50" and papyszmidnightstart == false then
 papyszmidnightstart = true
 startCountdown("Inbaaa",10,function()
-  RunConsoleCommand("ACF_SetPermissionMode","build")
-  RunConsoleCommand("wire_expression2_extension_enable","playercore")
-  RunConsoleCommand("wire_expression2_extension_enable","nexuscore")
-  RunConsoleCommand("sbox_noclip",1)
-  RunConsoleCommand("kylebuildmode_allownoclip",1)
-  SetGlobalBool("wojenna",false)
+  RunConsoleCommand("ulx","wojenna")
   BroadcastLua("runPapysz()")
   timer.Create("pshake",1/3,0,Shake)
   timer.Simple(60,function()
@@ -58,12 +53,7 @@ local date = (os.date("%H:%M:%S",os.time()))
 if date == "19:59:00" and wojennastart == false then
 wojennastart = true
 startCountdown("Wprowadzam Stan Wojenny",60,function()
-RunConsoleCommand("ACF_SetPermissionMode","battle")
-RunConsoleCommand("wire_expression2_extension_disable","playercore")
-RunConsoleCommand("wire_expression2_extension_disable","nexuscore")
-RunConsoleCommand("sbox_noclip",0)
-RunConsoleCommand("kylebuildmode_allownoclip",0)
-SetGlobalBool("wojenna",true)
+RunConsoleCommand("ulx","wojenna")
 wojennastart = false
 end)
 end

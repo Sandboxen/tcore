@@ -148,14 +148,18 @@ end
         end)
         end)
     end
-timer.Create("MinigameTimer", 60*10, 0, function()
+print("CebulaCoin Games Start")
+function cebulacoin.RandomGaem()
 local what = math.Rand(1,2)
 if what > 1.5 then
 cebulacoin.MathGame()
 else
 cebulacoin.TypingGame()
 end
-end)
+end
+
+timer.Create("CebulaMinigameTimer", 60*10, 0, cebulacoin.RandomGaem)
+cebulacoin.RandomGaem()
 else
     net.Receive("CebulaCoinEventSet",function()
         local str = net.ReadString()

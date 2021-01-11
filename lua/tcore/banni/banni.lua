@@ -326,6 +326,8 @@ elseif SERVER then
 			ply:SetSuperJumpMultiplier(1)
 			ply:SetJumpPower(0)
 		end
+		print("[BANNI]")
+		PrintTable(food)
 	end
 
 	banni.unban = function(whosteamid, steamid,reason)
@@ -361,6 +363,7 @@ elseif SERVER then
 			if ply.csidemodel then ply.csidemodel:Remove() end
 			hook.Run("PlayerLoadout", ply)
 		end
+		print("[Banni]",steamid,reason,whosteamid)
 	end
 end
 local CATEGORY_NAME = "Utility"

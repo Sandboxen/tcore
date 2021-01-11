@@ -44,7 +44,7 @@ local chudhide = {
 }
 
 hook.Add("HUDShouldDraw",tag,function(s)
---if chudhide[s] and PHUD.enabled:GetBool() then return false end
+if chudhide[s] and PHUD.enabled:GetBool() then return false end
 end)
 
 local function doHook()
@@ -65,7 +65,7 @@ PHUD.screenposy = sets[7]
 hook.Add("HUDPaint",tag,function()
 local scrw, scrh = ScrW(), ScrH()
 --if not LocalPlayer():IsTomek() then return end
-if true then return end-- disable for now
+--if true then return end-- disable for now
 if not PHUD.enabled:GetBool() then return end
 if pk_pills and IsValid(pk_pills.getMappedEnt(LocalPlayer())) then return end
 if LocalPlayer() then
@@ -419,7 +419,7 @@ local papyrzpos = {}
 local papyrzcol = {}
 local ok = {0,0,0} 
 hook.Add("HUDPaint","Papierz",function()
-	if PapierzMat and song and song:GetTime() > 17 then
+	if song and song:GetTime() > 17 then
 		for i,v in ipairs(papyrzpos) do
 			surface.SetMaterial(GetURL("http://loading.tomekb530.me/papysz?test="..papyszMats[i],100,100,120))
 			surface.SetDrawColor(Color(255,255,255,255))
