@@ -1,3 +1,5 @@
+local papyszenable = CreateClientConVar("papaj_enable","1")
+
 
 local function getRandomPapysz(cb)
 print("test")
@@ -22,7 +24,13 @@ local function GetURL(url, w, h, time)
 	return Material("error")
 end
 
+
 function runPapysz()
+if true then return end
+if not papyszenable:GetBool() then 
+print("Papysz hour not enabled")
+return 
+end
 local papyszMats = {}
 local song
 sound.PlayURL("http://tomekb530.me/barka.mp3","",function(st)

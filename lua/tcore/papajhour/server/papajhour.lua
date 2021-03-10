@@ -17,3 +17,4 @@ end
 end)
 end
 end)
+hook.Remove("Think","waitforpapyszmidnight")
