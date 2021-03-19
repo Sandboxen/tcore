@@ -1,10 +1,10 @@
 local papyszenable = CreateClientConVar("papaj_enable", "1")
-local max = 30
+local max = 10
 
 surface.CreateFont("PapajHourInba", {
-	font = "Tahoma",
+	font = "Roboto",
 	extended = true,
-	size = 48,
+	size = 50,
 	weight = 400,
 	antialias = true
 })
