@@ -35,13 +35,15 @@ local function giveVipFor(ply,howlong)
   ulx.adduser( ply, ply, "vip" )
 end
 
+TCore.giveVipFor = giveVipFor
+
 net.Receive("tb530vipcheck",function(_,ply)
     local id = net.ReadString()
 
     checkVip(id,function(amount)
         if amount == 1200 then
             giveVipFor(ply,60*60*24*30)
-        elseif amount == 100 then
+        elseif amount == 500 then
             giveVipFor(ply,60*60*24*7)
         end
     end,function()
