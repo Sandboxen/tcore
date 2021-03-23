@@ -1,20 +1,15 @@
+hook.Add("Think", "PapajHour::Wait", function()
+	local date = (os.date("%H:%M:%S", os.time()))
 
-local papyszmidnightstart = false
-hook.Add("Think","waitforpapyszmidnight",function()
-local date = (os.date("%H:%M:%S",os.time()))
-if date == "21:36:50" and papyszmidnightstart == false then
-papyszmidnightstart = true
-startCountdown("Koniec Wojennej",10,function()
-if(GetGlobalBool("wojenna"))then  
-RunConsoleCommand("ulx","wojenna")
-end
---  BroadcastLua("runPapysz()")
-  --[[timer.Create("pshake",1/3,0,Shake)
-  timer.Simple(60,function()
-  timer.Remove("pshake")
-  end)]]
-  papyszmidnightstart = false
+	if date == "21:36:50" then
+			hook.Remove("Think", "PapajHour::Wait")
+
+			startCountdown("Inbaaa", 10, function()
+					if (GetGlobalBool("wojenna")) then
+							RunConsoleCommand("ulx", "wojenna")
+					end
+
+					BroadcastLua("runPapysz()")
+			end)
+	end
 end)
-end
-end)
---hook.Remove("Think","waitforpapyszmidnight")
