@@ -9,6 +9,6 @@
             end
         end
     end
-end)]]--NO MORE USED
-hook.Remove("Think","Pac3MorphCompat")
+end)
+hook.Remove("Think","Pac3MorphCompat")]]--NO MORE USED
 

@@ -33,6 +33,7 @@ StarFall - https://github.com/thegrb93/starfallex
 }}
 HelpSwep = {}
 function HelpSwep.gui()
+if HelpSwep.helpgui then HelpSwep.helpgui:Remove() end
 HelpSwep.helpgui = vgui.Create("DPanel")
 	HelpSwep.helpgui:SetSize(1024, 512)
 	HelpSwep.helpgui:SetPos(ScrW() / 2 - HelpSwep.helpgui:GetWide() / 2, ScrH() / 2 - HelpSwep.helpgui:GetTall() / 2)
@@ -93,4 +94,5 @@ local x,y = surface.GetTextSize(txt)
 info:SetText(txt)
 info:SetSize(x,y)
 end
+HelpSwep.helpgui:Remove()
 end

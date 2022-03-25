@@ -87,7 +87,7 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 	local hellowidth = surface.GetTextSize("Witaj "..LocalPlayer():Name().."!")
   	p:Text(TimeString, "Coolvetica100", x+150, y+30)
 	p:Text(DateString, "Coolvetica100", 800, y+30)
-	p:Text("Witaj "..LocalPlayer():Name().."!","Screens_Roboto100",0,0-600)
+	p:Text("Witaj "..LocalPlayer():Name().."!","Screens_Roboto100",0,0-500)
 	p:Text("Lista Administratorów","Screens_Roboto60",400,-230)
 	p:Text("(KLIKNIJ NA PROFILOWE ABY WEJSC NA PROFIL)","Screens_Roboto30",400,-180)
 	local k = 0
@@ -115,7 +115,7 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 		k=k+1
 	end
 	k=0
-	p:Text("Znajdujesz sie na serwerze Polski Sandbox","Screens_Roboto100",0,0-500)
+	p:Text(GetHostName(),"Screens_Roboto100",0,0-600)
 	p:Text("Uptime: "..os.date("%H:%M:%S",CurTime()),"Screens_Roboto100",0,0-400)
 	p:Text("Wlasciciel :","Screens_Roboto70",-800+(450/2),-260)
 	if p:Button("","Screens_Roboto1",-950+(450/2),-150,300,300,Color(0,0,0,0),Color(0,0,0,0)) then
@@ -132,10 +132,7 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 		LocalPlayer():ConCommand("ulx grupa")
 		cooldown = CurTime()+3
 	end
-	if p:Button("Pomoc","Screens_Roboto100",-950,700,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
-	 LocalPlayer():ConCommand("say !pomoc")
-	 cooldown = CurTime()+3
-	end
+	
 
 	if p:Button("Tryb PVP","Screens_Roboto100",-450,200,450,200,Color(150,0,0),Color(255,0,0)) and cooldown < CurTime() then
 		LocalPlayer():ConCommand("ulx pvp")

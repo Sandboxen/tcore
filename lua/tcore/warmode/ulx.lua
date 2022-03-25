@@ -1,6 +1,6 @@
 function ulx.warmode(calling_ply,time,reason)
 if SERVER then
-    if GetGlobalBool("wojenna",false) == false then
+    if not GetGlobalBool("wojenna",false) then
         RunConsoleCommand("ACF_SetPermissionMode","battle")
         RunConsoleCommand("wire_expression2_extension_disable","playercore")
         RunConsoleCommand("wire_expression2_extension_disable","nexuscore")
@@ -16,7 +16,7 @@ if SERVER then
         SetGlobalBool("wojenna",false)
     end
 end
-if GetGlobalBool("wojenna",false) == false then
+if not GetGlobalBool("wojenna",false) then
 ulx.fancyLogAdmin( calling_ply, "#A wprowadzil stan wojenny.")
 else
 ulx.fancyLogAdmin( calling_ply, "#A wylaczyl stan wojenny.")

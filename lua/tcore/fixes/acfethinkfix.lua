@@ -23,8 +23,8 @@ if CLIENT then
     end)
 else
     hook.Add("ClientLuaError","AcfEFix",function(msg,stack,traceback,ply)
-if(msg == "lua/autorun/acf_extras.lua:309: attempt to call field 'oldThink' (a nil value)") then
-ply:ConCommand("acfefix")
-end
-end)
+        if(msg == "lua/autorun/acf_extras.lua:309: attempt to call field 'oldThink' (a nil value)") then
+            ply:ConCommand("acfefix")
+        end
+    end)
 end

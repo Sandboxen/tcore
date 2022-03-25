@@ -48,6 +48,7 @@ local function calc_wall(ply, data)
 	end
 end
 
+local a = 0
 local function Move(ply, data)
 	if GetGlobalBool("wojenna") then return end
 	local mult = ply:GetSuperJumpMultiplier()
@@ -55,6 +56,7 @@ local function Move(ply, data)
 	if ply:KeyPressed(IN_JUMP) and ply:GetMoveType() == MOVETYPE_WALK then
 		if mult ~= 1 and ply:IsOnGround() then
 			data:SetVelocity(data:GetVelocity() * mult)
+			
 
 			local eye = math.Clamp(ply:EyeAngles().p / 89, 0, 1) ^ 3
 			if eye > 0.3 then
@@ -96,5 +98,5 @@ end
 
 if SERVER then
 	RunConsoleCommand("sv_airaccelerate", "1000000")
-	--RunConsoleCommand("sv_maxvelocity", "20000")
+	RunConsoleCommand("sv_sticktoground", "0")
 end

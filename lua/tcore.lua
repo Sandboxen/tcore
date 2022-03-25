@@ -43,6 +43,7 @@ local function betterErr()
     hook.Add("ClientLuaError","TCoreClientEror",function(player, fullerror, sourcefile, sourceline, errorstr, stack)
       local errordata
       if IsValid(player) then
+        print(player)
         errordata = {os.time(),player:Nick(),player:SteamID64(),fullerror, sourcefile, sourceline, errorstr, stack}
       else
         errordata = {os.time(),"none","none",fullerror, sourcefile, sourceline, errorstr, stack}

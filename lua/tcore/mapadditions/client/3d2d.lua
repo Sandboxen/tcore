@@ -128,6 +128,9 @@ if finfo[6] then
         local tw = surface.GetTextSize(finfo[6])
         surface.SetTextPos(-tw/2,0)
         surface.DrawText(finfo[6])
+		surface.SetMaterial(Material("models/wireframe"))
+		surface.SetDrawColor(Color(255,255,255))
+		surface.DrawTexturedRect(-finfo[3]*5,-finfo[4]*5,finfo[3]*10,finfo[4]*10)
     cam.End3D2D()
 end
 if sinfo[6] then
@@ -137,6 +140,9 @@ if sinfo[6] then
         local tw = surface.GetTextSize(sinfo[6])
         surface.SetTextPos(-tw/2,0)
         surface.DrawText(sinfo[6])
+		surface.SetMaterial(Material("models/wireframe"))
+		surface.SetDrawColor(Color(255,255,255))
+		surface.DrawTexturedRect(-sinfo[3]*5,-sinfo[4]*5,sinfo[3]*10,sinfo[4]*10)
     cam.End3D2D()
 end
 end
