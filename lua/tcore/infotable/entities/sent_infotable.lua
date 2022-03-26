@@ -89,7 +89,7 @@ local DateString = os.date("%d/%m/%Y", Timestamp)
 	p:Text(DateString, "Coolvetica100", 800, y+30)
 	p:Text("Witaj "..LocalPlayer():Name().."!","Screens_Roboto100",0,0-500)
 	p:Text("Lista Administratorów","Screens_Roboto60",400,-230)
-	p:Text("(KLIKNIJ NA PROFILOWE ABY WEJSC NA PROFIL)","Screens_Roboto30",400,-180)
+	p:Text("(I tak nie wchodza)","Screens_Roboto30",400,-180)
 	local k = 0
 	for i,v in pairs(fagmins1) do
 		local ply = i
