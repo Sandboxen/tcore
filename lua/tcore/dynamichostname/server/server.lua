@@ -39,6 +39,6 @@ local hostnames = {
   hook.Add("PlayerSay","GetLastMessageForDynamic",function(ply,txt)
     if not string.StartWith(txt,"!") then
       lastmsg = string.sub(txt,0,32)
-      print(lastmsg)
+      --print(lastmsg)
     end
   end)
