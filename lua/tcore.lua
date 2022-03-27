@@ -167,7 +167,7 @@ local function initfilesmain(much)
         init_dir(v)
       end
       --loadingtext = v .. " ("..math.floor(percentagebase) .."%)"
-      coroutine.yield()
+      --coroutine.yield()
       loadmodule(v)
     end
     if (CLIENT) then
@@ -179,14 +179,14 @@ local function initfilesmain(much)
   coroutine.wait(5)
   end
   hook.Remove("Think","TCoreInitFiles")
-  hook.Remove("HUDPaint","TCoreInfoAboutFiles")
+  hook.Remove("PostDrawVGUI","TCoreInfoAboutFiles")
 end
 
 local function initfiles(much)
   much = much or 1
   local co
   if CLIENT then
-    hook.Add("HUDPaint","TCoreInfoAboutFiles",function()
+    hook.Add("PostDrawVGUI","TCoreInfoAboutFiles",function()
       surface.SetMaterial(loadmat)
       surface.SetDrawColor(Color(255,255,255))
       surface.DrawTexturedRectRotated(ScrW()/2,ScrH()/2,256,256,CurTime()*20)
@@ -209,21 +209,21 @@ local function reload_dir_main(dir)
   percentagebase = 0
   if (table.HasValue(folders,dir)) then
     if (SERVER) then
-      coroutine.yield()
+      --coroutine.yield()
       init_dir(dir .. "/libraries")
-      coroutine.yield()
+      --coroutine.yield()
       init_dir(dir .. "/preinit")
-      coroutine.yield()
+      --coroutine.yield()
       init_dir(dir .. "/postinit")
-      coroutine.yield()
+      --coroutine.yield()
       init_dir(dir .. "/entities")
-      coroutine.yield()
+      --coroutine.yield()
       init_dir(dir .. "/weapons")
-      coroutine.yield()
+      --coroutine.yield()
       init_dir(dir)
     end
     loadingtext = dir .. " ("..math.floor(percentagebase) .."%)"
-    coroutine.yield()
+    --coroutine.yield()
     loadmodule(dir)
     loadingtext = "Done!"
   end
