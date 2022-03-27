@@ -14,3 +14,5 @@ end
 spawnmenu.AddToolCategory = function(tab, ...)
 	spawnmenu._AddToolCategory(redirect(tab), ...)
 end
+
+RunConsoleCommand("spawnmenu_reload")

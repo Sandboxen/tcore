@@ -176,7 +176,7 @@ local function initfilesmain(much)
       net.SendToServer()
     end
     if(hi==much) then loadingtext = "Done!" end
-  coroutine.wait(1)
+  coroutine.wait(5)
   end
   hook.Remove("Think","TCoreInitFiles")
   hook.Remove("HUDPaint","TCoreInfoAboutFiles")
@@ -323,7 +323,7 @@ TCore.libs = {}
   end
   msg("Init Files")
   initfiles(2)
-  msg("Init Files x2 in 1 sec just to be sure everythig loaded properly")
+  msg("Init Files x2 in 5 sec just to be sure everythig loaded properly")
   msg("Loaded!")
 
   if CLIENT then
