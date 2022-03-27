@@ -162,7 +162,7 @@ local function initfilesmain(much)
       net.Start("TCoreRequestCSFiles")
       net.SendToServer()
     end
-  coroutine.wait(5)
+  coroutine.wait(1)
   end
   hook.Remove("Think","TCoreInitFiles")
 end
@@ -265,7 +265,7 @@ TCore.libs = {}
   end
   msg("Init Files")
   initfiles(2)
-  msg("Init Files x2 in 5 secs just to be sure everythig loaded properly")
+  msg("Init Files x2 in 1 sec just to be sure everythig loaded properly")
   msg("Loaded!")
 
   if CLIENT then
