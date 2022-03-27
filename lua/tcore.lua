@@ -136,39 +136,45 @@ local function loadmodule(name)
   TCore.modules[name] = "tcore/" .. name
 end
 
-local function initfilesmain()
-local _,folders = file.Find("tcore/*","LUA")
-  for i,v in ipairs(folders) do
-    if (SERVER) then
+local function initfilesmain(much)
+  for i=1,much do
+    local _,folders = file.Find("tcore/*","LUA")
+    for i,v in ipairs(folders) do
+      if (SERVER) then
+        coroutine.yield()
+        init_dir(v .. "/libraries")
+        coroutine.yield()
+        init_dir(v .. "/preinit")
+        coroutine.yield()
+        init_dir(v .. "/postinit")
+        coroutine.yield()
+        init_dir(v .. "/entities")
+        coroutine.yield()
+        init_dir(v .. "/weapons")
+        coroutine.yield()
+        init_dir(v)
+      end
       coroutine.yield()
-      init_dir(v .. "/libraries")
-      coroutine.yield()
-      init_dir(v .. "/preinit")
-      coroutine.yield()
-      init_dir(v .. "/postinit")
-      coroutine.yield()
-      init_dir(v .. "/entities")
-      coroutine.yield()
-      init_dir(v .. "/weapons")
-      coroutine.yield()
-      init_dir(v)
+      loadmodule(v)
     end
-    coroutine.yield()
-    loadmodule(v)
-  end
-  if (CLIENT) then
-    msg("Checking Files")
-    net.Start("TCoreRequestCSFiles")
-    net.SendToServer()
+    if (CLIENT) then
+      msg("Checking Files")
+      net.Start("TCoreRequestCSFiles")
+      net.SendToServer()
+    end
+  coroutine.wait(5)
   end
   hook.Remove("Think","TCoreInitFiles")
 end
 
-local function initfiles()
+local function initfiles(much)
+  much = much or 1
   local co
   hook.Add("Think","TCoreInitFiles",function()
     if not co or not coroutine.resume(co) then
-      co = coroutine.create(initfilesmain)
+      co = coroutine.create(function()
+        initfilesmain(much)
+      end)
       coroutine.resume(co)
     end
   end)
@@ -258,9 +264,8 @@ TCore.libs = {}
     betterErr()
   end
   msg("Init Files")
-  initfiles()
+  initfiles(2)
   msg("Init Files x2 in 5 secs just to be sure everythig loaded properly")
-  timer.Simple(5,initfiles)
   msg("Loaded!")
 
   if CLIENT then
