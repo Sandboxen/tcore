@@ -4,6 +4,7 @@ if !luaerror and SERVER then
         print(why)
     end
 end
+
 if (!TCore) then
 include("tcore.lua")
 end

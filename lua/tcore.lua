@@ -8,6 +8,9 @@ TCore.clienterrors = {}
 TCore.othererrors = {}
 TCore.otherclienterrors = {}
 TCore.CSFiles = {}
+local loadmat = Material("widgets/disc.png")
+local loadingtext = "Loading"
+local percentagebase = 0
 local function msg(...)
   if (SERVER) then
     MsgC("[TCoreSV]",unpack({...}))
@@ -82,6 +85,8 @@ local function run_dir(dir)
   if (CLIENT or SERVER) then
     local files = file.Find(dir .. "/*.lua","LUA")
     for i,v in ipairs(files) do
+      --coroutine.yield()
+      loadingtext = string.sub(dir,7) .. "/client/" .. v .. " ("..math.floor(percentagebase) .."%)"
       msg("Loading ",dir .. "/" .. v)
       load_file(dir .. "/" .. v)
     end
@@ -96,6 +101,8 @@ local function run_dir(dir)
   if (CLIENT) then
     local files = file.Find(dir .. "/client/*.lua","LUA")
       for i,v in ipairs(files) do
+        loadingtext = string.sub(dir,7) .. "/client/" .. v .. " ("..math.floor(percentagebase) .."%)"
+        --coroutine.yield()
         msg("Loading ",dir .. "/client/" .. v)
         load_file(dir .. "/client/" .. v)
       end
@@ -119,27 +126,32 @@ end
 
 local function loadmodule(name)
   run_dir("tcore/" .. name)
-  for i,v in ipairs(file.Find("tcore/" .. name .. "/entities/*.lua","LUA")) do
+  local entfiles = file.Find("tcore/" .. name .. "/entities/*.lua","LUA")
+  local weapfiles = file.Find("tcore/" .. name .. "/weapons/*.lua","LUA")
+  for i,v in ipairs(entfiles) do
     local ok, ent = load_file("tcore/" .. name .. "/entities/" .. v)
     msg("Loading ","tcore/" .. name .. "/entities/" .. v)
     if ok and istable(ent) then
       scripted_ents.Register(ent,string.StripExtension(v))
     end
+    loadingtext = name .. "/entities/" .. v .. " ("..math.floor(percentagebase) .."%)"
   end
-  for i,v in ipairs(file.Find("tcore/" .. name .. "/weapons/*.lua","LUA")) do
+  for i,v in ipairs(weapfiles) do
     local ok, swep = load_file("tcore/" .. name .. "/weapons/" .. v)
     msg("Loading ","tcore/" .. name .. "/weapons/" .. v)
     if ok and istable(swep) then
       weapons.Register(swep,string.StripExtension(v))
     end
+    loadingtext = name .. "/entities/" .. v .. " ("..math.floor(percentagebase) .."%)"
   end
   TCore.modules[name] = "tcore/" .. name
 end
 
 local function initfilesmain(much)
-  for i=1,much do
+  for hi=1,much do
     local _,folders = file.Find("tcore/*","LUA")
     for i,v in ipairs(folders) do
+      percentagebase = ((hi/much)/#folders*i*100)
       if (SERVER) then
         coroutine.yield()
         init_dir(v .. "/libraries")
@@ -154,6 +166,7 @@ local function initfilesmain(much)
         coroutine.yield()
         init_dir(v)
       end
+      --loadingtext = v .. " ("..math.floor(percentagebase) .."%)"
       coroutine.yield()
       loadmodule(v)
     end
@@ -162,14 +175,25 @@ local function initfilesmain(much)
       net.Start("TCoreRequestCSFiles")
       net.SendToServer()
     end
+    if(hi==much) then loadingtext = "Done!" end
   coroutine.wait(1)
   end
   hook.Remove("Think","TCoreInitFiles")
+  hook.Remove("HUDPaint","TCoreInfoAboutFiles")
 end
 
 local function initfiles(much)
   much = much or 1
   local co
+  if CLIENT then
+    hook.Add("HUDPaint","TCoreInfoAboutFiles",function()
+      surface.SetMaterial(loadmat)
+      surface.SetDrawColor(Color(255,255,255))
+      surface.DrawTexturedRectRotated(ScrW()/2,ScrH()/2,256,256,CurTime()*20)
+      draw.SimpleTextOutlined("Loading","Trebuchet24",ScrW()/2,ScrH()/2-15,Color(255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,1,Color(0,0,0))
+      draw.SimpleTextOutlined(loadingtext,"Trebuchet24",ScrW()/2,ScrH()/2+15,Color(255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,1,Color(0,0,0))
+    end)
+  end
   hook.Add("Think","TCoreInitFiles",function()
     if not co or not coroutine.resume(co) then
       co = coroutine.create(function()
@@ -180,26 +204,60 @@ local function initfiles(much)
   end)
 end
 
-local function reload_dir(dir)
+local function reload_dir_main(dir)
   local _,folders = file.Find("tcore/*","LUA")
+  percentagebase = 0
   if (table.HasValue(folders,dir)) then
     if (SERVER) then
+      coroutine.yield()
       init_dir(dir .. "/libraries")
+      coroutine.yield()
       init_dir(dir .. "/preinit")
+      coroutine.yield()
       init_dir(dir .. "/postinit")
+      coroutine.yield()
       init_dir(dir .. "/entities")
+      coroutine.yield()
       init_dir(dir .. "/weapons")
+      coroutine.yield()
       init_dir(dir)
     end
+    loadingtext = dir .. " ("..math.floor(percentagebase) .."%)"
+    coroutine.yield()
     loadmodule(dir)
+    loadingtext = "Done!"
   end
     if (CLIENT) then
     msg("Checking Files")
     net.Start("TCoreRequestCSFiles")
     net.SendToServer()
   end
+  loadingtext = "Done!" --just to be sure 
+  coroutine.wait(1)
+  hook.Remove("Think","TCoreReloadFiles")
+  hook.Remove("HUDPaint","TCoreInfoAboutReFiles")
 end
 
+local function reload_dir(dir)
+  local co
+  if CLIENT then
+    hook.Add("HUDPaint","TCoreInfoAboutReFiles",function()
+      surface.SetMaterial(loadmat)
+      surface.SetDrawColor(Color(255,255,255))
+      surface.DrawTexturedRectRotated(ScrW()/2,ScrH()/2,256,256,CurTime()*20)
+      draw.SimpleTextOutlined("ReLoading","Trebuchet24",ScrW()/2,ScrH()/2-15,Color(255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,1,Color(0,0,0))
+      draw.SimpleTextOutlined(loadingtext,"Trebuchet24",ScrW()/2,ScrH()/2+15,Color(255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,1,Color(0,0,0))
+    end)
+  end
+  hook.Add("Think","TCoreReloadFiles",function()
+    if not co or not coroutine.resume(co) then
+      co = coroutine.create(function()
+        reload_dir_main(dir)
+      end)
+      coroutine.resume(co)
+    end
+  end)
+end
 
 local function find_lib(dir,name)
   local res
