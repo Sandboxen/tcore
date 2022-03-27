@@ -3,7 +3,7 @@ PHUD = {}
 PHUD.posx,PHUD.posy = 150,150
 PHUD.screenposx,PHUD.screenposy = 0,ScrH()-300
 PHUD.scale = 0.4
-PHUD.enabled = CreateClientConVar("phud_enabled","0")
+PHUD.enabled = CreateClientConVar("phud_enabled","1")
 PHUD.maincolor = Color(200,0,20,255)
 PHUD.outlinecolor = Color(0,100,0,200)
 PHUD.armorcolor = Color(127,127,127,255)
@@ -188,6 +188,9 @@ end
 if true then
   surface.SetFont("PHUD_Name")
 	local buildmodew = surface.GetTextSize(LocalPlayer().buildmode and "Build" or "PVP")
+  if GetGlobalBool("wojenna",false) then
+    buildmodew = surface.GetTextSize("Wojenna (PVP)")
+  end
 	local buildmodeposx,buildmodeposy = x + 55,y-53
 	local buildmodepoly = {}
 	buildmodepoly[1] = {x = buildmodeposx + buildmodew + 30,y = buildmodeposy}
@@ -199,7 +202,11 @@ if true then
 	surface.DrawPoly(buildmodepoly)
 	surface.SetTextPos(x + 80,y-49)
   surface.SetTextColor(PHUD.fontcolor)
-	surface.DrawText(LocalPlayer().buildmode and "Build" or "PVP")
+  if GetGlobalBool("wojenna",false) then
+    surface.DrawText("Wojenna (PVP)")
+  else
+    surface.DrawText(LocalPlayer().buildmode and "Build" or "PVP")
+  end
 end
 
 if LocalPlayer():GetNWString("OnSpawn",false) then
@@ -372,6 +379,9 @@ hook.Add("HUDDrawTargetID","TargetIDOverride",function()
         local a, b, _ = ColorToHSV(team.GetColor(ply:Team()))
         local nick = string.Replace(ply:Name(), "\n","")
         local build = ply.buildmode and "[BUILD]" or "[PVP]"
+        if GetGlobalBool("wojenna",false) then
+          build = ""
+        end
         draw.DrawText(ply:Name() .. "\n" .. healthpercent .. "%\n"..build ,"ChatFont",ScrW() / 2,ScrH() / 1.8,HSVToColor(a,b * 0.8,0.9),TEXT_ALIGN_CENTER)
         end
     return false

@@ -121,7 +121,7 @@ if CLIENT then
 		if(ply.banni) then
 			for k,v in pairs(ents.FindInSphere(LocalPlayer():GetPos(),256)) do
 				if(v == LocalPlayer()) then
-					chat.AddText(Color(237,67,55), "[BANNI] ", team.GetColor(ply:Team()), ply:Nick(), Color(255,255,255), ": ", txt)
+					chat.AddText(Color(237,67,55), "[DZBAN] ", team.GetColor(ply:Team()), ply:Nick(), Color(255,255,255), ": ", txt)
 				end
 			end
 			return false

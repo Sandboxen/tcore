@@ -153,17 +153,17 @@ local function initfilesmain(much)
     for i,v in ipairs(folders) do
       percentagebase = ((hi/much)/#folders*i*100)
       if (SERVER) then
-        coroutine.yield()
+        --coroutine.yield()
         init_dir(v .. "/libraries")
-        coroutine.yield()
+        --coroutine.yield()
         init_dir(v .. "/preinit")
-        coroutine.yield()
+        --coroutine.yield()
         init_dir(v .. "/postinit")
-        coroutine.yield()
+        --coroutine.yield()
         init_dir(v .. "/entities")
-        coroutine.yield()
+        --coroutine.yield()
         init_dir(v .. "/weapons")
-        coroutine.yield()
+        --coroutine.yield()
         init_dir(v)
       end
       --loadingtext = v .. " ("..math.floor(percentagebase) .."%)"

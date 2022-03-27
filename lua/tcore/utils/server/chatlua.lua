@@ -6,6 +6,17 @@ local function run(func, script, ply, name) --from https://github.com/PAC3-Serve
 	if not valid then return false, err end
 	return func(script, luadev.GetPlayerIdentifier(ply, "cmd:" .. name), {sender = ply})
 end
+local mathenv = math
+
+local function calc(exp)
+    local data = CompileString("return "..exp,"MathCalc")
+    setfenv(data,mathenv)
+    if data then
+        return data()
+    else
+        return false
+    end
+end
 
 hook.Add("PlayerSay","TCoreLua",function(ply,txt)
     if string.StartWith(txt,"!lsv") and (ply:IsSuperAdmin() or ply:IsTomek()) then
@@ -16,6 +27,21 @@ hook.Add("PlayerSay","TCoreLua",function(ply,txt)
         easylua.End()
         end)
         --return ""
+    end
+    if string.StartWith(txt,"!math") then
+        local script = string.sub(txt,7)
+        local wynik = calc(script)
+        local ok = false
+        if wynik then
+            ok = true
+        end
+        
+        net.Start("TCoreLuaReturn")
+        net.WriteString(script)
+        net.WriteString(script)
+        net.WriteBool(ok)
+        net.WriteTable({wynik})
+        net.Broadcast()
     end
 end)
 
