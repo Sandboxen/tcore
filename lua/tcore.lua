@@ -43,7 +43,6 @@ local function betterErr()
     hook.Add("ClientLuaError","TCoreClientEror",function(player, fullerror, sourcefile, sourceline, errorstr, stack)
       local errordata
       if IsValid(player) then
-        print(player)
         errordata = {os.time(),player:Nick(),player:SteamID64(),fullerror, sourcefile, sourceline, errorstr, stack}
       else
         errordata = {os.time(),"none","none",fullerror, sourcefile, sourceline, errorstr, stack}
@@ -137,17 +136,24 @@ local function loadmodule(name)
   TCore.modules[name] = "tcore/" .. name
 end
 
-local function initfiles()
+local function initfilesmain()
 local _,folders = file.Find("tcore/*","LUA")
   for i,v in ipairs(folders) do
     if (SERVER) then
+      coroutine.yield()
       init_dir(v .. "/libraries")
+      coroutine.yield()
       init_dir(v .. "/preinit")
+      coroutine.yield()
       init_dir(v .. "/postinit")
+      coroutine.yield()
       init_dir(v .. "/entities")
+      coroutine.yield()
       init_dir(v .. "/weapons")
+      coroutine.yield()
       init_dir(v)
     end
+    coroutine.yield()
     loadmodule(v)
   end
   if (CLIENT) then
@@ -155,6 +161,17 @@ local _,folders = file.Find("tcore/*","LUA")
     net.Start("TCoreRequestCSFiles")
     net.SendToServer()
   end
+  hook.Remove("Think","TCoreInitFiles")
+end
+
+local function initfiles()
+  local co
+  hook.Add("Think","TCoreInitFiles",function()
+    if not co or not coroutine.resume(co) then
+      co = coroutine.create(initfilesmain)
+      coroutine.resume(co)
+    end
+  end)
 end
 
 local function reload_dir(dir)
@@ -279,10 +296,13 @@ TCore.libs = {}
     net.Receive("TCoreRequestCSFile",function(_,ply)
       local what = net.ReadString()
       local this = file.Read(what,"LUA")
+      local cp = util.Compress(this)
+      local size = #cp
       msg(ply:Nick(), " is requesting ",what)
       net.Start("TCoreRequestCSFile")
-      net.WriteString(this)
       net.WriteString(what)
+      net.WriteUInt(size,16)
+      net.WriteData(cp,size)
       net.Send(ply)
     end)
   end
@@ -293,7 +313,7 @@ TCore.libs = {}
       for _,filename in ipairs(v) do
        local s = CompileFile(filename,"TCore",false)
        if not s then
-        msg("Requesting File And Loading Manually")
+        msg("Requesting " .. filename .." And Loading Manually")
         net.Start("TCoreRequestCSFile")
         net.WriteString(filename)
         net.SendToServer()
@@ -302,8 +322,10 @@ TCore.libs = {}
     end
   end)
   net.Receive("TCoreRequestCSFile",function()
-    local file = net.ReadString()
     local filename = net.ReadString()
+    local size = net.ReadUInt(16)
+    local filedata = net.ReadData(size)
+    local file = util.Decompress(filedata)
     msg("Got File")
     local load,err = CompileString(file,"requested")
     if not err then
