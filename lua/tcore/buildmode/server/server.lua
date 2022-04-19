@@ -23,27 +23,47 @@ hook.Add("OnPhysgunPickup","PropDupa",function(ply,ent)
     end
 end)
 hook.Add("EntityTakeDamage","BuildModeDamage",function(ent,dmg)
-    local isbanni = ent.banni or false --XD
-    if dmg:GetDamageCustom() == 2137 then return end
-    local attacker = dmg:GetAttacker()
-    if ent:IsPlayer() and attacker:GetClass() == "prop_physics" then
-        attacker = attacker.lastPicker or attacker:CPPIGetOwner()
-    end
-    if IsValid(ent) and IsValid(attacker) then
-        if ent:IsPlayer() and attacker:IsPlayer() then
-            if ent:GetBuildMode() and not attacker:GetBuildMode() then
-                local dmginfo = DamageInfo()
-                dmginfo:SetDamage(dmg:GetDamage())
-                dmginfo:SetDamageType(DMG_DISSOLVE)
-                dmginfo:SetDamageCustom(2137)
-                dmginfo:SetInflictor(ent)
-                dmginfo:SetAttacker(ent)
-                attacker:TakeDamageInfo(dmginfo)
-                dmg:ScaleDamage(0)
+    if GetGlobalBool("wojenna",false) == false then
+        local isbanni = ent.banni or false --XD
+        if dmg:GetDamageCustom() == 2137 then return end
+        local attacker = dmg:GetAttacker()
+        if ent:IsPlayer() and (attacker:GetClass() == "prop_physics" or attacker:GetClass() == "starfall_prop") then
+            attacker = attacker.lastPicker or attacker:CPPIGetOwner()
+        end
+        if ent:IsPlayer() and attacker:GetClass() == "gmod_sent_vehicle_fphysics_base" then
+            if IsValid(attacker:GetDriverSeat():GetDriver()) then
+                if not attacker:GetDriverSeat():GetDriver():GetBuildMode() then
+                    if attacker:CPPIGetOwner() != attacker:GetDriverSeat():GetDriver() then
+                        attacker = attacker:GetDriverSeat():GetDriver()
+                    else
+                        attacker:ApplyDamage(dmg:GetDamage(),DMG_BLAST)
+                    end
+                end
+            else
+                attacker = attacker.lastPicker or attacker:CPPIGetOwner()
             end
-            if attacker:GetBuildMode() and (ent:GetBuildMode() and not isbanni) then
-                dmg:ScaleDamage(0)
+        end
+        if IsValid(ent) and IsValid(attacker) then
+            if ent:IsPlayer() and attacker:IsPlayer() then
+                if ent:GetBuildMode() and not attacker:GetBuildMode() then
+                    local dmginfo = DamageInfo()
+                    dmginfo:SetDamage(dmg:GetDamage())
+                    dmginfo:SetDamageType(DMG_DISSOLVE)
+                    dmginfo:SetDamageCustom(2137)
+                    dmginfo:SetInflictor(ent)
+                    dmginfo:SetAttacker(ent)
+                    attacker:TakeDamageInfo(dmginfo)
+                end
+                if attacker:GetBuildMode() and (ent:GetBuildMode() and not isbanni) then
+                    dmg:ScaleDamage(0)
+                end
+                if not ent:GetBuildMode() and attacker:GetBuildMode() then
+                    dmg:ScaleDamage(0)
+                end
             end
+        end
+        if IsValid(ent) and ent:IsPlayer() and ent:GetBuildMode() then
+            dmg:ScaleDamage(0)
         end
     end
 end)
