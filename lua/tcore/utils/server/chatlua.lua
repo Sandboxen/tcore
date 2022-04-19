@@ -9,12 +9,12 @@ end
 local mathenv = math
 
 local function calc(exp)
-    local data = CompileString("return "..exp,"MathCalc")
-    setfenv(data,mathenv)
-    if data then
+    local data = CompileString("return "..exp,"MathCalc",false)
+    if type(data) == "function" then
+        setfenv(data,mathenv)
         return data()
     else
-        return false
+        return data
     end
 end
 

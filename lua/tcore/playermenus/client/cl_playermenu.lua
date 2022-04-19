@@ -462,7 +462,7 @@ plyMenu.openMenu = function()
 	end)
 	end
 	end)
-	if LocalPlayer().buildmode == true then
+	if LocalPlayer():GetBuildMode() == true then
 		addButton(mainopts,"Tryb PVP",function() LocalPlayer():ConCommand('ulx pvp\n') playermenupanel:Remove() end)
 	else
 		addButton(mainopts,"Tryb Budowania",function() LocalPlayer():ConCommand('ulx build\n') playermenupanel:Remove() end)

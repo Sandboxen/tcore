@@ -27,6 +27,7 @@ hook.Add("EntityTakeDamage","BuildModeDamage",function(ent,dmg)
         local isbanni = ent.banni or false --XD
         if dmg:GetDamageCustom() == 2137 then return end
         local attacker = dmg:GetAttacker()
+        --print(ent,attacker)
         if ent:IsPlayer() and (attacker:GetClass() == "prop_physics" or attacker:GetClass() == "starfall_prop") then
             attacker = attacker.lastPicker or attacker:CPPIGetOwner()
         end
@@ -60,6 +61,11 @@ hook.Add("EntityTakeDamage","BuildModeDamage",function(ent,dmg)
                 if not ent:GetBuildMode() and attacker:GetBuildMode() then
                     dmg:ScaleDamage(0)
                 end
+            end
+        end
+        if ent:GetClass() == "gmod_sent_vehicle_fphysics_base" then
+            if attacker:IsPlayer() and attacker:GetBuildMode() then
+                dmg:ScaleDamage(0)
             end
         end
         if IsValid(ent) and ent:IsPlayer() and ent:GetBuildMode() then
