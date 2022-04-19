@@ -1,1 +1,3 @@
-print("chujcl")
+do
+    --ok
+end

@@ -29,17 +29,18 @@ local gxml = trequire("gxml")
 local tdui = trequire("tdui")
 local fagmins1 ={
 ["Toster"] = {"76561198262766606"},
-["Raptoistus"] = {"76561198218416708"},
+--["Raptoistus"] = {"76561198218416708"},
 ["Jak ci Ruski Nick Przeszkadza"] = {"76561198179740577",25},
-["Szufler"] = {"76561198103676045"}
+--["Szufler"] = {"76561198103676045"}
 }
 local howMuchFagmins1 = table.Count(fagmins1)
 local fagmins2 ={
-["Yukio77"] = {"76561198151649602"},
-["Dr.Freezeman"] = {"76561198206103919"},
+["r0nii"] = {"76561198119197768"},
+["troche"] = {"76561198225706808",30},
 ["yo_bonez"] = {"76561198199790238"},
-["DominikPc73"] = {"76561198109040046",50},
+--["DominikPc73"] = {"76561198109040046",50}
 }
+		
 
 local howMuchFagmins2 = table.Count(fagmins2)
 local Rainbow  = 0
