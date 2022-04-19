@@ -497,7 +497,8 @@ plyMenu.openMenu = function()
 		--["gmod_mcore_test"] = "Renderowanie Wielordzeniowe",
 		["dnd_enable"]="Nie przeszkadzac",
 		["chat_prefixes_enable"]="Pokazuj tagi na chacie",
-		["cl_enable_esc_menu"]="Customowe ESC menu"
+		["cl_enable_esc_menu"]="Customowe ESC menu",
+		["phud_enabled"] = "Custom HUD",
 	}
 	for i,v in pairs(convars) do
 	if GetConVar(i) then 

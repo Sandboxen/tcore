@@ -187,7 +187,7 @@ end
 
 if true then
   surface.SetFont("PHUD_Name")
-	local buildmodew = surface.GetTextSize(LocalPlayer().buildmode and "Build" or "PVP")
+	local buildmodew = surface.GetTextSize(LocalPlayer():GetBuildMode() and "Build" or "PVP")
   if GetGlobalBool("wojenna",false) then
     buildmodew = surface.GetTextSize("Wojenna (PVP)")
   end
@@ -205,7 +205,7 @@ if true then
   if GetGlobalBool("wojenna",false) then
     surface.DrawText("Wojenna (PVP)")
   else
-    surface.DrawText(LocalPlayer().buildmode and "Build" or "PVP")
+    surface.DrawText(LocalPlayer():GetBuildMode() and "Build" or "PVP")
   end
 end
 
@@ -378,7 +378,7 @@ hook.Add("HUDDrawTargetID","TargetIDOverride",function()
         local healthpercent = (ply:Health() / ply:GetMaxHealth()) * 100
         local a, b, _ = ColorToHSV(team.GetColor(ply:Team()))
         local nick = string.Replace(ply:Name(), "\n","")
-        local build = ply.buildmode and "[BUILD]" or "[PVP]"
+        local build = ply:GetBuildMode() and "[BUILD]" or "[PVP]"
         if GetGlobalBool("wojenna",false) then
           build = ""
         end

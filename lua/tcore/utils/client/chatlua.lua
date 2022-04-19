@@ -9,3 +9,5 @@ net.Receive("TCoreLuaReturn",function()
     chat.AddText(color,ok and "[Sukces] " or "[Błąd] ",Color(255,255,255),chunkname," Return: ",unpack(returnvals)) 
     end)
 end)
+
+EasyChat.FilterString = function(str) return str end --DONT CENSOR ME KTHXBYE
