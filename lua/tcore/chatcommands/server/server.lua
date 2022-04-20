@@ -17,6 +17,11 @@ ply:SendLua([[
 OpenVipGui()
 ]])
 return ""
+elseif txt == "!taunt"  then
+ply:SendLua([[
+OpenMMDGUI()
+]])
+return ""
 end
 end
 )

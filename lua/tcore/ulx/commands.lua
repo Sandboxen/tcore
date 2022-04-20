@@ -50,6 +50,8 @@ hook.Add("ULXLoaded","tcoreload",function()
 
     function ulx.unbuild(calling_ply)
         calling_ply:SetBuildMode(false)
+        calling_ply:KillSilent()
+        calling_ply:Spawn()
         ulx.fancyLogAdmin( calling_ply, "#A zmienil tryb na PVP.", affected_plys )
     end
     local unbuild = ulx.command("Buildmode", "ulx pvp", ulx.unbuild, "!pvp")

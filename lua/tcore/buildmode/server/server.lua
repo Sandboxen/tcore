@@ -9,6 +9,7 @@ hook.Add("PlayerDisconnected","SavePlayerBuildmodeStatus",function(ply)
         ply:SetPData("buildmode",ply:GetNWBool("buildmode"))
     end
 end)
+local spawnProtect = {}
 
 local plymeta = FindMetaTable("Player")
 function plymeta:SetBuildMode(bool)
@@ -67,19 +68,46 @@ hook.Add("EntityTakeDamage","BuildModeDamage",function(ent,dmg)
             if attacker:IsPlayer() and attacker:GetBuildMode() then
                 dmg:ScaleDamage(0)
             end
+            if attacker:IsPlayer() and not attacker:GetBuildMode() and ent:CPPIGetOwner():GetBuildMode() then
+                dmg:ScaleDamage(0)
+            end
         end
-        if IsValid(ent) and ent:IsPlayer() and ent:GetBuildMode() then
+        spawnProtect[ent] = spawnProtect[ent] or 0
+        if IsValid(ent) and ent:IsPlayer() and (ent:GetBuildMode() or spawnProtect[ent] > CurTime()) then
             dmg:ScaleDamage(0)
+        end
+        if(IsValid(ent) and ent:IsPlayer() and IsValid(attacker) and attacker:IsPlayer()) then
+            ent.damageFrom=ent.damageFrom or {}
+            ent.damageFrom[attacker] = ent.damageFrom[attacker] or 0
+            ent.damageFrom[attacker] = ent.damageFrom[attacker] + dmg:GetDamage()
         end
     end
 end)
 local positions = {}
-hook.Add("PlayerDeath","RepawnPos",function(ply)
+hook.Add("PlayerDeath","RepawnPos",function(ply, _, attacker)
+    if(ply.damageFrom) then
+        for i,v in pairs(ply.damageFrom) do
+            if i:IsPlayer() and i != ply then
+                if(v>0)then
+                    i:AddMoney(math.Clamp(v,0,100)*4)
+                end
+            end
+        end
+    end
+    ply.damageFrom = {}
     positions[ply]=ply:GetPos()
 end)
 hook.Add("PlayerSpawn","respawnpos",function(ply)
-    if positions[ply] and ply:GetBuildMode() then
+    if positions[ply] and ply:GetBuildMode() and not GetGlobalBool("wojenna",false) then
         ply:SetPos(positions[ply])
         positions[ply]=nil
+    end
+    if not ply:GetBuildMode() then
+        spawnProtect[ply] = CurTime() + 5
+    end
+end)
+hook.Add("PlayerNoClip","DisNoclip",function(ply,state)
+    if (not ply:GetBuildMode() or GetGlobalBool("wojenna",false)) and state == true then
+        return false
     end
 end)

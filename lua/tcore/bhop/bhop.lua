@@ -131,7 +131,7 @@ end
 
 hook.Add("Move", hook_key, function(ply, data)
 	if ply:GetMoveType() ~= MOVETYPE_WALK then return end
-
+	if GetGlobalBool("wojenna",false)then return end
 	local mult = ply:GetSuperJumpMultiplier()
 
 	if mult ~= 1 and data:KeyPressed(IN_JUMP) and ply:IsOnGround() then

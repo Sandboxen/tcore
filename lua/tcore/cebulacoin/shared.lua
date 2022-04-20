@@ -3,7 +3,12 @@ local plyMeta = FindMetaTable("Player")
 function plyMeta:GetMoney()
 return tonumber(self:GetNWString("cebulacoin",0))
 end
-
+function plyMeta:getDarkRPVar(var)
+    if var == "money" then
+        return self:GetMoney()
+    end
+    return nil
+end
 local charset = {}
 for i = 65,  90 do table.insert(charset, string.char(i)) end
 for i = 97, 122 do table.insert(charset, string.char(i)) end
@@ -17,8 +22,10 @@ local function stringrandom(length)
     return ""
   end
 end
-
+DarkRP = DarkRP or {}
+DarkRP.notify =  function() end
 if SERVER then
+--SHADY DARKRP COMPAT :trolltomek: im lazy to edit addons xD
 
 function plyMeta:AddMoney(much)
 local money = self:GetNWString("cebulacoin",0)
@@ -31,6 +38,7 @@ end
 self:SetNWString("cebulacoin",money+much)
 self:SetPData("cebulacoin",self:GetMoney())
 end
+plyMeta.addMoney = plyMeta.AddMoney
 
 function plyMeta:GiveMoneyTo(who,much)
 much = math.floor(math.abs(much))
@@ -49,7 +57,6 @@ end
     util.AddNetworkString("CebulaCoinDrop")
     util.AddNetworkString("CebulaCoinGive")
     net.Receive("CebulaCoinGive",function(_,ply)
-    print(ply)
     local much = tonumber(net.ReadString())
     much = math.floor(much)
     local who = net.ReadEntity()
@@ -60,7 +67,6 @@ end
     much = math.Clamp(much, 0, tonumber(ply:GetMoney()))
     if tonumber(ply:GetMoney()) >= tonumber(much) then
         local coin = ents.Create("coin")
-        print(coin)
         local hitpos = ply:GetEyeTrace().HitPos
         local spawnpos = ply:GetPos():Distance(hitpos) > 300 and ply:LocalToWorld(Vector(150,0,10)) or hitpos+Vector(0,0,10)
         coin:SetPos(spawnpos)

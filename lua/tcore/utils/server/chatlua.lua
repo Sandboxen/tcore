@@ -9,12 +9,17 @@ end
 local mathenv = math
 
 local function calc(exp)
-    local data = CompileString("return "..exp,"MathCalc",false)
+    local data = CompileString("return "..exp,":script_error",false)
     if type(data) == "function" then
         setfenv(data,mathenv)
-        return data()
+        local result = data()
+        if result then
+            return true,result
+        else
+            return false,exp .. " = nil"
+        end
     else
-        return data
+        return false,data
     end
 end
 
@@ -30,11 +35,7 @@ hook.Add("PlayerSay","TCoreLua",function(ply,txt)
     end
     if string.StartWith(txt,"!math") then
         local script = string.sub(txt,7)
-        local wynik = calc(script)
-        local ok = false
-        if wynik then
-            ok = true
-        end
+        local ok,wynik = calc(script)
         
         net.Start("TCoreLuaReturn")
         net.WriteString(script)
