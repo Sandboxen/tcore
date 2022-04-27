@@ -23,22 +23,22 @@ function ENT:Initialize()
 	end
 end
 function ENT:StartTouch(ply)
-if(IsValid(ply) and ply:IsPlayer() and self:GetNWBool("work",false))then
-ply:AddMoney(self:GetMoney())
-self:Remove()
-end
+	if(IsValid(ply) and ply:IsPlayer() and self:GetNWBool("work",false))then
+		ply:AddMoney(self:GetMoney())
+		self:Remove()
+	end
 end
 else
 
 function ENT:Draw()
-self:DrawModel()
-cam.Start3D2D(self:LocalToWorld(Vector(2,0,0)),self:LocalToWorldAngles(Angle(0,90,90)),0.1)
-surface.SetTextColor(Color(255,255,255))
-surface.SetFont("Coolvetica outlined50")
-local tw,th = surface.GetTextSize(self:GetMoney().."$")
-surface.SetTextPos(-tw/2,-th/2)
-surface.DrawText(self:GetMoney().."$")
-cam.End3D2D()
+	self:DrawModel()
+	cam.Start3D2D(self:LocalToWorld(Vector(2,0,0)),self:LocalToWorldAngles(Angle(0,90,90)),0.1)
+	surface.SetTextColor(Color(255,255,255))
+	surface.SetFont("Coolvetica outlined50")
+	local tw,th = surface.GetTextSize(self:GetMoney().."$")
+	surface.SetTextPos(-tw/2,-th/2)
+	surface.DrawText(self:GetMoney().."$")
+	cam.End3D2D()
 end
 
 end

@@ -172,13 +172,13 @@ else
         cebulacoin.event = str
     end)
     concommand.Add("dropcoins",function(ply,cmd,args)
-    local much = tonumber(args[1]) or 0
-    much = math.floor(much)
-    much = math.Clamp(much, 0, tonumber(ply:GetMoney()))
-    net.Start("CebulaCoinDrop")
-    net.WriteString(tostring(math.abs(much)))
-    net.SendToServer()
-    end)
+            local much = tonumber(args[1]) or 0
+            much = math.floor(much)
+            much = math.Clamp(much, 0, tonumber(ply:GetMoney()))
+            net.Start("CebulaCoinDrop")
+            net.WriteString(tostring(math.abs(much)))
+            net.SendToServer()
+        end)
     local function findply(data)
         for i,v in ipairs(player.GetAll()) do
             if v:Nick():lower() == data:lower() then
@@ -186,9 +186,14 @@ else
             end
         end
     end
+    local cooldown =  0
     concommand.Add("givecoins",function(ply,cmd,args)
     local much = tonumber(args[2]) or 0
     local who = findply(args[1])
+    if cooldown > CurTime() then
+        chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Poczekaj!")
+        return
+    end
     if not who then 
     chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Nie znaleziono gracza o takim nicku!")
     return
@@ -199,6 +204,7 @@ else
     net.WriteString(tostring(math.abs(much)))
     net.WriteEntity(who)
     net.SendToServer()
+    cooldown = CurTime()+3
     end,function(cmd)
         local tbl = {}
         for i,v in ipairs(player.GetAll()) do

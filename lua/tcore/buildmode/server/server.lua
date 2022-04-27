@@ -16,7 +16,11 @@ function plymeta:SetBuildMode(bool)
     self:SetNWBool("buildmode",bool)
 end
 function plymeta:GetBuildMode()
-    return self:GetNWBool("buildmode",false)
+    if GetGlobalBool("wojenna",false) then
+        return false 
+    else
+        return self:GetNWBool("buildmode",false)
+    end
 end
 hook.Add("OnPhysgunPickup","PropDupa",function(ply,ent) 
     if ent:GetClass() == "prop_physics" then
@@ -24,63 +28,63 @@ hook.Add("OnPhysgunPickup","PropDupa",function(ply,ent)
     end
 end)
 hook.Add("EntityTakeDamage","BuildModeDamage",function(ent,dmg)
-    if GetGlobalBool("wojenna",false) == false then
-        local isbanni = ent.banni or false --XD
-        if dmg:GetDamageCustom() == 2137 then return end
-        local attacker = dmg:GetAttacker()
-        --print(ent,attacker)
-        if ent:IsPlayer() and (attacker:GetClass() == "prop_physics" or attacker:GetClass() == "starfall_prop") then
+    local isbanni = ent.banni or false --XD
+    if dmg:GetDamageCustom() == 21372137 and not string.StartWith(dmg:GetInflictor():GetClass(),"m9k_") then return end
+    local attacker = dmg:GetAttacker()
+    --print(ent,attacker)
+    if ent:IsPlayer() and (attacker:GetClass() == "prop_physics" or attacker:GetClass() == "starfall_prop") then
+        attacker = attacker.lastPicker or attacker:CPPIGetOwner()
+    end
+    if ent:IsPlayer() and attacker:GetClass() == "gmod_sent_vehicle_fphysics_base" then
+        if IsValid(attacker:GetDriverSeat():GetDriver()) then
+            if not attacker:GetDriverSeat():GetDriver():GetBuildMode() then
+                if attacker:CPPIGetOwner() != attacker:GetDriverSeat():GetDriver() then
+                    attacker = attacker:GetDriverSeat():GetDriver()
+                else
+                    attacker:ApplyDamage(dmg:GetDamage(),DMG_BLAST)
+                end
+            end
+        else
             attacker = attacker.lastPicker or attacker:CPPIGetOwner()
         end
-        if ent:IsPlayer() and attacker:GetClass() == "gmod_sent_vehicle_fphysics_base" then
-            if IsValid(attacker:GetDriverSeat():GetDriver()) then
-                if not attacker:GetDriverSeat():GetDriver():GetBuildMode() then
-                    if attacker:CPPIGetOwner() != attacker:GetDriverSeat():GetDriver() then
-                        attacker = attacker:GetDriverSeat():GetDriver()
-                    else
-                        attacker:ApplyDamage(dmg:GetDamage(),DMG_BLAST)
-                    end
-                end
-            else
-                attacker = attacker.lastPicker or attacker:CPPIGetOwner()
+    end
+    
+    if IsValid(ent) and IsValid(attacker) then
+        if ent:IsPlayer() and attacker:IsPlayer() then
+            if ent:GetBuildMode() and not attacker:GetBuildMode() then
+                local dmginfo = DamageInfo()
+                dmginfo:SetDamage(dmg:GetDamage())
+                dmginfo:SetDamageType(DMG_DISSOLVE)
+                dmginfo:SetDamageCustom(21372137)
+                dmginfo:SetInflictor(ent)
+                dmginfo:SetAttacker(ent)
+                attacker:TakeDamageInfo(dmginfo)
             end
-        end
-        if IsValid(ent) and IsValid(attacker) then
-            if ent:IsPlayer() and attacker:IsPlayer() then
-                if ent:GetBuildMode() and not attacker:GetBuildMode() then
-                    local dmginfo = DamageInfo()
-                    dmginfo:SetDamage(dmg:GetDamage())
-                    dmginfo:SetDamageType(DMG_DISSOLVE)
-                    dmginfo:SetDamageCustom(2137)
-                    dmginfo:SetInflictor(ent)
-                    dmginfo:SetAttacker(ent)
-                    attacker:TakeDamageInfo(dmginfo)
-                end
-                if attacker:GetBuildMode() and (ent:GetBuildMode() and not isbanni) then
-                    dmg:ScaleDamage(0)
-                end
-                if not ent:GetBuildMode() and attacker:GetBuildMode() then
-                    dmg:ScaleDamage(0)
-                end
-            end
-        end
-        if ent:GetClass() == "gmod_sent_vehicle_fphysics_base" then
-            if attacker:IsPlayer() and attacker:GetBuildMode() then
+            if attacker:GetBuildMode() and (ent:GetBuildMode() and not isbanni) then
                 dmg:ScaleDamage(0)
             end
-            if attacker:IsPlayer() and not attacker:GetBuildMode() and ent:CPPIGetOwner():GetBuildMode() then
+            if not ent:GetBuildMode() and attacker:GetBuildMode() then
                 dmg:ScaleDamage(0)
             end
         end
-        spawnProtect[ent] = spawnProtect[ent] or 0
-        if IsValid(ent) and ent:IsPlayer() and (ent:GetBuildMode() or spawnProtect[ent] > CurTime()) then
+    end
+    if ent:GetClass() == "gmod_sent_vehicle_fphysics_base" then
+        if attacker:IsPlayer() and attacker:GetBuildMode() then
             dmg:ScaleDamage(0)
         end
-        if(IsValid(ent) and ent:IsPlayer() and IsValid(attacker) and attacker:IsPlayer()) then
-            ent.damageFrom=ent.damageFrom or {}
-            ent.damageFrom[attacker] = ent.damageFrom[attacker] or 0
-            ent.damageFrom[attacker] = ent.damageFrom[attacker] + dmg:GetDamage()
+        if attacker:IsPlayer() and not attacker:GetBuildMode() and ent:CPPIGetOwner():GetBuildMode() then
+            dmg:ScaleDamage(0)
         end
+    end
+    spawnProtect[ent] = spawnProtect[ent] or 0
+    if IsValid(ent) and ent:IsPlayer() and (ent:GetBuildMode() or spawnProtect[ent] > CurTime()) then
+        dmg:ScaleDamage(0)
+        
+    end
+    if(IsValid(ent) and ent:IsPlayer() and IsValid(attacker) and attacker:IsPlayer()) then
+        ent.damageFrom=ent.damageFrom or {}
+        ent.damageFrom[attacker] = ent.damageFrom[attacker] or 0
+        ent.damageFrom[attacker] = ent.damageFrom[attacker] + dmg:GetDamage()
     end
 end)
 local positions = {}
@@ -107,7 +111,7 @@ hook.Add("PlayerSpawn","respawnpos",function(ply)
     end
 end)
 hook.Add("PlayerNoClip","DisNoclip",function(ply,state)
-    if (not ply:GetBuildMode() or GetGlobalBool("wojenna",false)) and state == true then
+    if (not ply:GetBuildMode()) and state == true then
         return false
     end
 end)
