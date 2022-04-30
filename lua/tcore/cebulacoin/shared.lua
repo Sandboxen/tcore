@@ -42,7 +42,7 @@ plyMeta.addMoney = plyMeta.AddMoney
 
 function plyMeta:GiveMoneyTo(who,much)
 much = math.floor(math.abs(much))
-if much > 0 and IsValid(who) then
+if much > 0 and IsValid(who) and self:GetMoney() >= much then
 self:AddMoney(-much)
 who:AddMoney(much)
 chat.AddText(who,Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś ",Color(255,0,0),much,"$ ",Color(230,230,230),"od ",Color(255,0,0),self:Name(),Color(230,230,230),"!")
