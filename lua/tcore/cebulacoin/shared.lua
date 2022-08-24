@@ -49,7 +49,7 @@ chat.AddText(who,Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś "
 chat.AddText(self,Color(128,0,255),"[SERVER]",Color(230,230,230)," Dałeś ",Color(255,0,0),much,"$ ",Color(230,230,230),"dla ",Color(255,0,0),who:Name(),Color(230,230,230),"!")
 end
 end
-
+local timeouts = {}
 function plyMeta:SetMoney(much)
 self:SetNWString("cebulacoin",math.floor(much))
 end
@@ -63,24 +63,28 @@ end
     ply:GiveMoneyTo(who,much)
     end)
     net.Receive("CebulaCoinDrop",function(_,ply)
-    local much = tonumber(net.ReadString())
-    much = math.Clamp(much, 0, tonumber(ply:GetMoney()))
-    if tonumber(ply:GetMoney()) >= tonumber(much) then
-        local coin = ents.Create("coin")
-        local hitpos = ply:GetEyeTrace().HitPos
-        local spawnpos = ply:GetPos():Distance(hitpos) > 300 and ply:LocalToWorld(Vector(150,0,10)) or hitpos+Vector(0,0,10)
-        coin:SetPos(spawnpos)
-        coin:Spawn()
-        coin:SetMoney(much)
-        timer.Simple(0.1,function()
-            coin:SetNWBool("work",true)
-        end)
-        coin:CPPISetOwner(ply)
-        ply:AddMoney(-much)
+    timeouts[ply] = timeouts[ply] or 0
+    if timeouts[ply] < CurTime() then
+        local much = tonumber(net.ReadString())
+        much = math.Clamp(much, 0, tonumber(ply:GetMoney()))
+        if tonumber(ply:GetMoney()) >= tonumber(much) then
+            local coin = ents.Create("coin")
+            local hitpos = ply:GetEyeTrace().HitPos
+            local spawnpos = ply:GetPos():Distance(hitpos) > 300 and ply:LocalToWorld(Vector(150,0,10)) or hitpos+Vector(0,0,10)
+            coin:SetPos(spawnpos)
+            coin:Spawn()
+            coin:SetMoney(much)
+            timer.Simple(0.1,function()
+                coin:SetNWBool("work",true)
+            end)
+            coin:CPPISetOwner(ply)
+            ply:AddMoney(-much)
+            timeouts[ply] = CurTime() + 5
+        end
     end
     end)
     hook.Add("PlayerInitialSpawn","LoadMoney",function(ply)
-    ply:SetMoney(ply:GetPData("cebulacoin",0))
+    ply:SetMoney(ply:GetPData("cebulacoin",1000))
     end)
 
     hook.Add("PlayerDisconnected","SaveMoney",function(ply)

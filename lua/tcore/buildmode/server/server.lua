@@ -115,3 +115,4 @@ hook.Add("PlayerNoClip","DisNoclip",function(ply,state)
         return false
     end
 end)
+--hook.Remove("PlayerNoClip","DisNoclip")

@@ -1,4 +1,5 @@
 local hostnames = {
+  "Rekrutacja!",
   "ACF/E2/SProps/PAC3",
   "chatmess",
   "Fajna zabawa",
