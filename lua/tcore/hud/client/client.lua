@@ -145,6 +145,30 @@ surface.SetFont("PHUD_Name")
 end
 end
 
+if LocalPlayer():InVehicle() then
+  local veh = LocalPlayer():GetVehicle()
+  if IsValid(veh:GetParent()) and veh:GetVelocity():Length() == 0 then
+    veh = veh:GetParent()
+  end
+  local speedmph = math.floor(veh:GetVelocity():Length() * 0.0568188) --mph
+  local speedkmh = math.floor(veh:GetVelocity():Length() *  0.09144) --kmh
+  local speedpoly = {}
+  surface.SetFont("PHUD_Name")
+  local speedposx,speedposy = x-20,y-155
+  local speedw,speedh = surface.GetTextSize(LocalPlayer():GetVehicle():GetVehicleClass().." Speed: "..speedkmh .. " km/h")
+  surface.DrawRect(x-20,y-155,speedw+20,speedh+20)
+  speedpoly[1] = {x = speedposx-20,y = speedposy}
+  speedpoly[2] = {x = speedposx,y = speedposy}
+  speedpoly[3] = {x = speedposx,y = speedposy+70}
+  speedpoly[4] = {x = speedposx-20,y = speedposy+90}
+  surface.SetDrawColor(PHUD.outlinecolor)
+  surface.DrawPoly(speedpoly)
+  surface.SetTextPos(x-10,y-135)
+  surface.SetTextColor(PHUD.fontcolor)
+
+  surface.DrawText(LocalPlayer():GetVehicle():GetVehicleClass().." Speed: "..speedkmh .. " km/h")
+end
+
 local weapon = LocalPlayer():GetActiveWeapon()
 if IsValid(weapon) then
     local clip = tonumber(weapon:Clip1()) or -1
