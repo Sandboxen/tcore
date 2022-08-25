@@ -245,7 +245,7 @@ local function reload_dir(dir)
       surface.SetMaterial(loadmat)
       surface.SetDrawColor(Color(255,255,255))
       surface.DrawTexturedRectRotated(ScrW()/2,ScrH()/2,256,256,CurTime()*20)
-      draw.SimpleTextOutlined("ReLoading","Trebuchet24",ScrW()/2,ScrH()/2-15,Color(255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,1,Color(0,0,0))
+      draw.SimpleTextOutlined("ReLoading "..dir,"Trebuchet24",ScrW()/2,ScrH()/2-15,Color(255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,1,Color(0,0,0))
       draw.SimpleTextOutlined(loadingtext,"Trebuchet24",ScrW()/2,ScrH()/2+15,Color(255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,1,Color(0,0,0))
     end)
   end

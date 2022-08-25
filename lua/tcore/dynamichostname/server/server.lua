@@ -1,14 +1,19 @@
 local hostnames = {
-  "Rekrutacja!",
   "ACF/E2/SProps/PAC3",
   "chatmess",
-  "Fajna zabawa",
+  "Zapraszamy!",
   "chatmess",
   "Frajer Pompka Jestes",
   "chatmess",
   "D00psko",
   "chatmess",
   "Admin chity",
+  "chatmess",
+  "😎😎",
+  "chatmess",
+  "😐",
+  "chatmess",
+  "🧑‍💻"
   }
   
   util.AddNetworkString("HostnameChangerSync")
@@ -19,7 +24,11 @@ local hostnames = {
     local wojenna = GetGlobalBool("wojenna")
     local ischatmess = false
     if hostnames[k] == "chatmess" then
-      hostnames[k] = lastmsg
+      if lastmsg == "" then
+        hostnames[k] = hostnames[k+1]
+      else
+        hostnames[k] = lastmsg
+      end
       ischatmess = true
     end
     game.ConsoleCommand("hostname [PL] Sandboxen - "..(wojenna and "Stan Wojenny" or hostnames[k]).."\n")
@@ -29,6 +38,9 @@ local hostnames = {
     net.Broadcast()
     if ischatmess then
       hostnames[k] = "chatmess"
+      if lastmsg == "" then
+        k = k + 1
+      end
     end
     if k + 1 > #hostnames then
         k = 1
