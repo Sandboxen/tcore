@@ -11,6 +11,8 @@ hook.Add("PlayerDisconnected","SavePlayerBuildmodeStatus",function(ply)
 end)
 local spawnProtect = {}
 
+local msgcooldown = {}
+
 local plymeta = FindMetaTable("Player")
 function plymeta:SetBuildMode(bool)
     self:SetNWBool("buildmode",bool)
@@ -61,9 +63,19 @@ hook.Add("EntityTakeDamage","BuildModeDamage",function(ent,dmg)
                 attacker:TakeDamageInfo(dmginfo)
             end
             if attacker:GetBuildMode() and (ent:GetBuildMode() and not isbanni) then
+                msgcooldown[attacker] = msgcooldown[attacker] or 0
+                if msgcooldown[attacker] < CurTime() then
+                    attacker:SendLua("chat.AddText(Color(255,0,0),\"[BuildMode] \",Color(255,255,255),\"Nie mozesz atakowac graczy w trybie budowania!\")")
+                    msgcooldown[attacker] = CurTime() + 5
+                end
                 dmg:ScaleDamage(0)
             end
             if not ent:GetBuildMode() and attacker:GetBuildMode() then
+                msgcooldown[attacker] = msgcooldown[attacker] or 0
+                if msgcooldown[attacker] < CurTime() then
+                    attacker:SendLua("chat.AddText(Color(255,0,0),\"[BuildMode] \",Color(255,255,255),\"Nie mozesz atakowac graczy w trybie budowania!\")")
+                    msgcooldown[attacker] = CurTime() + 5
+                end
                 dmg:ScaleDamage(0)
             end
         end

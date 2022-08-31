@@ -168,7 +168,7 @@ cebulacoin.TypingGame()
 end
 end
 timer.Create("GiveCashForPlayin",60*5,0,function()
-    for k,v in pairs(player.GetAll()) do
+    for k,v in ipairs(player.GetAll()) do
         v:AddMoney(100)
     end
 end)
