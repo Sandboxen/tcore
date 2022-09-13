@@ -11,13 +11,6 @@ hook.Add("PlayerDisconnect","RemoveFromLoaded",function(ply)
 end)
 end
 if CLIENT then
-    _G.oldprint = _G.oldprint or _G.print
-    _G.print = function(...)
-    if LocalPlayer().IsTomek and LocalPlayer():IsTomek() then
-    debug.Trace()
-    end
-    return _G.oldprint(...)
-    end
 hook.Add("HUDPaint","FinishLoadingChecker",function()
 hook.Remove("HUDPaint","FinishLoadingChecker")
 net.Start("PlayerFinishedLoading")

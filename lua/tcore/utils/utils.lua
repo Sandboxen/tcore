@@ -22,3 +22,25 @@ function FindPlayer(info)
 
 	return nil
 end
+
+
+--BETTER PRINT
+_G.oldprint = _G.oldprint or print
+function _G.print(...)
+	local tag = SERVER and "[TCoreSV]" or "[TCoreCL]" 
+	local match = debug.getinfo(2).source:match("@addons/tcore/lua/tcore/(%w+)")
+	if CLIENT and LocalPlayer() == GetTomek() then debug.Trace() end
+	if match then
+		tag = tag .. "[" .. match .. "]"
+
+		if (SERVER) then
+			MsgC(tag,unpack({...}))
+			MsgC("\n")
+		elseif (CLIENT) then
+			MsgC(tag,unpack({...}))
+			MsgC("\n")
+		end
+  	else
+		_G.oldprint(...)
+  	end
+end

@@ -28,30 +28,32 @@ if SERVER then
 --SHADY DARKRP COMPAT :trolltomek: im lazy to edit addons xD
 
 function plyMeta:AddMoney(much)
-local money = self:GetNWString("cebulacoin",0)
-much = math.floor(much)
-if much >= 0 then
-self:SendLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś ",Color(255,0,0),"]]..math.abs(much)..[[$")]])
-else
-self:SendLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Straciłeś ",Color(255,0,0),"]]..math.abs(much)..[[$")]])
-end
-self:SetNWString("cebulacoin",money+much)
-self:SetPData("cebulacoin",self:GetMoney())
+    local money = self:GetNWString("cebulacoin",0)
+    much = math.floor(much)
+    if much != 0 then
+        if much > 0 then
+        self:SendLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś ",Color(255,0,0),"]]..math.abs(much)..[[$")]])
+        else
+        self:SendLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Straciłeś ",Color(255,0,0),"]]..math.abs(much)..[[$")]])
+        end
+    end
+    self:SetNWString("cebulacoin",money+much)
+    self:SetPData("cebulacoin",self:GetMoney())
 end
 plyMeta.addMoney = plyMeta.AddMoney
 
 function plyMeta:GiveMoneyTo(who,much)
-much = math.floor(math.abs(much))
-if much > 0 and IsValid(who) and self:GetMoney() >= much then
-self:AddMoney(-much)
-who:AddMoney(much)
-chat.AddText(who,Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś ",Color(255,0,0),much,"$ ",Color(230,230,230),"od ",Color(255,0,0),self:Name(),Color(230,230,230),"!")
-chat.AddText(self,Color(128,0,255),"[SERVER]",Color(230,230,230)," Dałeś ",Color(255,0,0),much,"$ ",Color(230,230,230),"dla ",Color(255,0,0),who:Name(),Color(230,230,230),"!")
-end
+    much = math.floor(math.abs(much))
+    if much > 0 and IsValid(who) and self:GetMoney() >= much then
+        self:AddMoney(-much)
+        who:AddMoney(much)
+        chat.AddText(who,Color(128,0,255),"[SERVER]",Color(230,230,230)," Otrzymałeś ",Color(255,0,0),much,"$ ",Color(230,230,230),"od ",Color(255,0,0),self:Name(),Color(230,230,230),"!")
+        chat.AddText(self,Color(128,0,255),"[SERVER]",Color(230,230,230)," Dałeś ",Color(255,0,0),much,"$ ",Color(230,230,230),"dla ",Color(255,0,0),who:Name(),Color(230,230,230),"!")
+    end
 end
 local timeouts = {}
 function plyMeta:SetMoney(much)
-self:SetNWString("cebulacoin",math.floor(much))
+    self:SetNWString("cebulacoin",math.floor(much))
 end
     util.AddNetworkString("CebulaCoinEventSet")
     util.AddNetworkString("CebulaCoinDrop")

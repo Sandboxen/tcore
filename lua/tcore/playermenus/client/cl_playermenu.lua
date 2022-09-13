@@ -499,6 +499,7 @@ plyMenu.openMenu = function()
 		["chat_prefixes_enable"]="Pokazuj tagi na chacie",
 		["cl_enable_esc_menu"]="Customowe ESC menu",
 		["phud_enabled"] = "Custom HUD",
+		["phud_speedkmh"] = "Pokazuj predkosc w km/h"
 	}
 	for i,v in pairs(convars) do
 	if GetConVar(i) then 

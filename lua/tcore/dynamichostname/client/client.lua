@@ -1,4 +1,4 @@
-local activehostname = "[PL] Polski Sandbox"
+local activehostname = "[PL] Sandboxen"
 net.Receive("HostnameChangerSync",function()
   activehostname = net.ReadString()
 end)

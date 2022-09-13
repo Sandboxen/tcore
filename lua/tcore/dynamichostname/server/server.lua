@@ -8,6 +8,7 @@ local hostnames = {
   "D00psko",
   "chatmess",
   "Admin chity",
+  "Rekrutacja!"
   }
   
   util.AddNetworkString("HostnameChangerSync")

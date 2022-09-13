@@ -1,0 +1,1 @@
+TCore.AdminMod = TCore.AdminMod or {}

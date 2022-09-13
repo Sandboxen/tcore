@@ -4,6 +4,7 @@ PHUD.posx,PHUD.posy = 150,150
 PHUD.screenposx,PHUD.screenposy = 0,ScrH()-300
 PHUD.scale = 0.4
 PHUD.enabled = CreateClientConVar("phud_enabled","1")
+PHUD.speed = CreateClientConVar("phud_speedkmh","1")
 PHUD.maincolor = Color(200,0,20,255)
 PHUD.outlinecolor = Color(0,100,0,200)
 PHUD.armorcolor = Color(127,127,127,255)
@@ -157,8 +158,9 @@ if LocalPlayer():InVehicle() then
   local speedkmh = math.Round(veh:GetVelocity():Length() *  0.09144* 0.75) --kmh
   local speedpoly = {}
   surface.SetFont("PHUD_Name")
+  local speedfinal = not PHUD.speed:GetBool() and speedmph .. " mph" or speedkmh .. " km/h"
   local speedposx,speedposy = x-20,y-155
-  local speedw,speedh = surface.GetTextSize(LocalPlayer():GetVehicle():GetVehicleClass().." Speed: "..speedkmh .. " km/h")
+  local speedw,speedh = surface.GetTextSize(LocalPlayer():GetVehicle():GetVehicleClass().." Speed: "..speedfinal)
   surface.DrawRect(x-20,y-155,speedw,speedh+20)
   speedpoly[1] = {x = speedposx-20,y = speedposy}
   speedpoly[2] = {x = speedposx,y = speedposy}
@@ -169,7 +171,7 @@ if LocalPlayer():InVehicle() then
   surface.SetTextPos(x-30,y-135)
   surface.SetTextColor(PHUD.fontcolor)
 
-  surface.DrawText(LocalPlayer():GetVehicle():GetVehicleClass().." Speed: "..speedkmh .. " km/h")
+  surface.DrawText(LocalPlayer():GetVehicle():GetVehicleClass().." Speed: "..speedfinal)
 end
 
 local weapon = LocalPlayer():GetActiveWeapon()
