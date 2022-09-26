@@ -29,9 +29,8 @@ end
 timer.Simple(0.3,function()
 local winner
 for i,v in pairs(ppl) do
-    if not winner then winner = i
-        if v > ppl[winner] then winner = i end
-    end
+    if not winner then winner = i end
+    if v > ppl[winner] then winner = i end
 end
 timer.Simple(0.3,function()
 BroadcastLua([[chat.AddText(Color(128,0,255),"[SERVER]",Color(230,230,230)," Najwięcej propów zrespił: <hsv=[tick()*2],1,1>]].. winner:Nick() .." ["..ppl[winner].."] "..[[")]])
