@@ -1,11 +1,11 @@
 hook.Add("PlayerInitialSpawn","LoadPlayerBuildmodeStatus",function(ply)
-    if ply:IsValid() then
+    if IsValid(ply) then
         local data = ply:GetPData("buildmode",true)
         ply:SetNWBool("buildmode",data)
     end
 end)
 hook.Add("PlayerDisconnected","SavePlayerBuildmodeStatus",function(ply)
-    if ply:IsValid() then
+    if IsValid(ply) then
         ply:SetPData("buildmode",ply:GetNWBool("buildmode"))
     end
 end)

@@ -3,5 +3,5 @@ function plymeta:SetBuildMode(bool)
     self:SetNWBool("buildmode",bool)
 end
 function plymeta:GetBuildMode()
-    return self:GetNWBool("buildmode")
+    return self:GetNWBool("buildmode",true)
 end

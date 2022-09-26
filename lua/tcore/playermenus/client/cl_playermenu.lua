@@ -48,7 +48,7 @@ local function panelPaintBlur(w,h)
 	render.SetStencilFailOperation( STENCIL_KEEP )
 	render.SetStencilZFailOperation( STENCIL_KEEP )
 
-	surface.SetDrawColor(0,0,0,1)
+	surface.SetDrawColor(0,0,0,10)
 	surface.DrawRect(0,0,w,h)
 
 	render.SetStencilCompareFunction( STENCIL_EQUAL )
@@ -240,7 +240,7 @@ plyMenu.openMenu = function()
 
 	function body:Paint(w,h)
 		--panelPaintBlur(w,h)
-		surface.SetDrawColor(0,0,0, 50)
+		surface.SetDrawColor(0,0,0, 200)
 		surface.DrawRect(0,0,w,h)
 
 		surface.SetDrawColor(0,0,0)
@@ -429,6 +429,10 @@ plyMenu.openMenu = function()
 		end
 	end
 	local mainopts = addSection(body,"Funkcje")
+	addButton(mainopts, "Discord", function() LocalPlayer():ConCommand("say !discord") playermenupanel:Remove() end)
+	addButton(mainopts,"Lista Addonow",function()
+		RunConsoleCommand("ulx","addony")
+		end)
 	local tagbutt = addButton(mainopts,"Zmien Tag",function()
 	local frame = vgui.Create("DFrame")
 	frame:SetSize(400,300)
@@ -462,19 +466,13 @@ plyMenu.openMenu = function()
 	end)
 	end
 	end)
-	if LocalPlayer():GetBuildMode() == true then
+	if LocalPlayer():GetBuildMode() then
 		addButton(mainopts,"Tryb PVP",function() LocalPlayer():ConCommand('ulx pvp\n') playermenupanel:Remove() end)
 	else
 		addButton(mainopts,"Tryb Budowania",function() LocalPlayer():ConCommand('ulx build\n') playermenupanel:Remove() end)
 	end
 	addButton(mainopts,"Edycja HUDu",function() LocalPlayer():ConCommand('phud_edit\n') playermenupanel:Remove() end)
 	addButton(mainopts,"PAC3 Ignore",PacIgnoreList)
-	addButton(mainopts,"Lista Addonow",function()
-	RunConsoleCommand("ulx","addony")
-	end)
-	addButton(mainopts,"Lista Emotek",function()
-	RunConsoleCommand("emotes_list")
-	end)
 	addButton(mainopts,"Wincyj FPS (moze scrashowac gre)",function()
 	RunConsoleCommand("gmod_mcore_test", "1")
 	RunConsoleCommand("mat_queue_mode", "-1")

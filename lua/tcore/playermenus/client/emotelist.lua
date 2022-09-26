@@ -1,4 +1,4 @@
-if CLIENT then
+--[[if CLIENT then
 
 local function OpenEmoteGui()
 local menu = vgui.Create("DFrame")
@@ -107,3 +107,4 @@ concommand.Add("emotes_list",OpenEmoteGui)
 
 
 end
+]]--

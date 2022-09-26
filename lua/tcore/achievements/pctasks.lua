@@ -86,7 +86,11 @@ if SERVER then
         ply.PCTasks_Init_Passed = true
     end)
     hook.Add("PlayerSpawn","pctasks",function(ply)
-        --PCTasks.UpdateClients()        
+        if not ply.PCTasks_Init_Passed then
+            PCTasks.Send(ply)
+            ply.PCTasks_Init_Passed = true
+        end
+        PCTasks.UpdateClients()        
     end)
 
 end

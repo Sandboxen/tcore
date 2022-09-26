@@ -95,15 +95,13 @@ end)
     hook.Add("ClientLuaError","erroachieve",function(ply)
       PCTasks.Complete(ply,"Error")
     end)
-    hook.Add("Tick","pingachive",function()
-      for i,v in ipairs(player.GetAll()) do
-        if v:Ping() > 800 then
-            PCTasks.Complete(v,"Niemieckie łącze")
-        end
-        if not PCTasks.IsCompleted(v,"Prestiż") then
-          if v:GetUserGroup() == "vip" then
-            PCTasks.Complete(v,"Prestiż")
-          end
+    hook.Add("PlayerSpawn","CheckPing",function(v)
+      if v:Ping() > 800 then
+          PCTasks.Complete(v,"Niemieckie łącze")
+      end
+      if not PCTasks.IsCompleted(v,"Prestiż") then
+        if v:GetUserGroup() == "vip" then
+          PCTasks.Complete(v,"Prestiż")
         end
       end
     end)
