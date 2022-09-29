@@ -180,6 +180,7 @@ local function initfilesmain(much)
   end
   hook.Remove("Think","TCoreInitFiles")
   hook.Remove("PostDrawVGUI","TCoreInfoAboutFiles")
+  hook.Call("TCoreFinishInit")
 end
 
 local function initfiles(much)
@@ -318,9 +319,67 @@ TCore.libs = {}
     util.AddNetworkString("TCoreRequestCSFiles")
     util.AddNetworkString("TCoreRequestCSFile")
     util.AddNetworkString("TCoreForceReload")
+    util.AddNetworkString("TCoreRequestCSFileErr")
     msg("Detouring Errors")
     betterErr()
   end
+
+
+  _G.oldinclude = _G.oldinclude or include
+  _G.oldAddCSLuaFile = _G.oldAddCSLuaFile or AddCSLuaFile
+
+  if SERVER then
+    function _G.include(...)
+      local match = debug.getinfo(2).source:match("@addons/tcore/lua/tcore/(%w+)")
+      --print(match)
+      if match then
+        msg("Including " .. match .. "/" .. ...)
+        return _G.oldinclude("tcore/" .. match .. "/" .. ...)
+      else
+        return _G.oldinclude(...)
+      end
+    end
+    function _G.AddCSLuaFile(...)
+      local match = debug.getinfo(2).source:match("@addons/tcore/lua/tcore/(%w+)")
+      --print(match)
+      if match then
+        msg("Adding " .. match .. "/" .. ...)
+        --csfiles["tcore/".. match .. "/" .. ...] = true
+        TCore.CSFiles[match] = TCore.CSFiles[match] or {}
+        table.insert(TCore.CSFiles[match],"tcore/".. match .. "/" .. ...)
+        return _G.oldAddCSLuaFile("tcore/" .. match .. "/" .. ...)
+      else
+        return _G.oldAddCSLuaFile(...)
+      end
+    end
+  end
+
+  if CLIENT then
+    net.Receive("TCoreIncludeCSFileErr", function(len)
+      local err = net.ReadString()
+      msg(err)
+    end)
+    function _G.include(...)
+      local match = debug.getinfo(2).source:match("@addons/tcore/lua/tcore/(%w+)")
+      --print(match)
+      if match then
+        msg("Including " .. match .. "/" .. ...)
+        if file.Exists("tcore/" .. match .. "/" .. ..., "LUA") then
+          return _G.oldinclude("tcore/" .. match .. "/" .. ...)
+        else
+          msg("File not found, requesting from server")
+          net.Start("TCoreRequestCSFile")
+          net.WriteString("tcore/" .. match .. "/" .. ...)
+          net.SendToServer()
+        end
+        --_G.oldinclude("tcore/" .. match .. "/" .. ...)
+      else
+        return _G.oldinclude(...)
+      end
+    end
+  end
+
+
   msg("Init Files")
   initfiles(2)
   msg("Init Files x2 in 5 sec just to be sure everythig loaded properly")
@@ -356,20 +415,39 @@ TCore.libs = {}
     end)
   end
   if (SERVER)then
+    local function checkIfFileFromTCore(path)
+      for i,v in pairs(TCore.CSFiles) do
+        if table.HasValue(v,path) then
+          return true
+        end
+      end
+      return false
+    end
     net.Receive("TCoreRequestCSFile",function(_,ply)
       local what = net.ReadString()
       local this = file.Read(what,"LUA")
       local cp = util.Compress(this)
       local size = #cp
       msg(ply:Nick(), " is requesting ",what)
-      net.Start("TCoreRequestCSFile")
-      net.WriteString(what)
-      net.WriteUInt(size,16)
-      net.WriteData(cp,size)
-      net.Send(ply)
+      if checkIfFileFromTCore(what) then
+        net.Start("TCoreIncludeCSFile")
+        net.WriteString(what)
+        net.WriteUInt(size,32)
+        net.WriteData(cp,size)
+        net.Send(ply)
+      else
+        msg("File not found in TCore.CSFiles so not sending")
+        net.Start("TCoreRequestCSFileErr")
+        net.WriteString("File not found in TCore.CSFiles so not sending")
+        net.Send(ply)
+      end
     end)
   end
   if (CLIENT) then
+    net.Receive("TCoreRequestCSFileErr",function()
+      local err = net.ReadString()
+      msg(err)
+    end)
   net.Receive("TCoreRequestCSFiles",function()
     local files = net.ReadTable()
     for i,v in pairs(files) do
@@ -389,7 +467,7 @@ TCore.libs = {}
     local size = net.ReadUInt(16)
     local filedata = net.ReadData(size)
     local file = util.Decompress(filedata)
-    msg("Got File")
+    msg("Got file: " .. filename)
     local load,err = CompileString(file,"requested")
     if not err then
       if string.find(filename,"/entities/") then

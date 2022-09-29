@@ -31,7 +31,7 @@ function _G.print(...)
 	local match = debug.getinfo(2).source:match("@addons/tcore/lua/tcore/(%w+)")
 	if CLIENT and LocalPlayer() == GetTomek() then debug.Trace() end
 	if match then
-		tag = tag .. "[" .. match .. "]"
+		tag = tag .. "[" .. match .. "] "
 
 		if (SERVER) then
 			MsgC(tag,unpack({...}))
