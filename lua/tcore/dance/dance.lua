@@ -106,8 +106,8 @@ if CLIENT then
 					time = time + 0.11
 
 					ply:SetCycle(time)
-
-					return 0, ply:LookupSequence("taunt_dance")
+					
+					return 0, ply:LookupSequence(ply:GetInfo("cl_taunt"))
 				end
 			end)
 		else

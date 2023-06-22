@@ -1,14 +1,5 @@
 local hostnames = {
-  "ACF/E2/SProps/PAC3",
-  "chatmess",
-  "Fajna zabawa",
-  "chatmess",
-  "Frajer Pompka Jestes",
-  "chatmess",
-  "D00psko",
-  "chatmess",
-  "Admin chity",
-  "Rekrutacja!"
+  "nie wiem co tu wpisac",
   }
   
   util.AddNetworkString("HostnameChangerSync")

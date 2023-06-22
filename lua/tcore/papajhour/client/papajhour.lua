@@ -1,5 +1,9 @@
 local papyszenable = CreateClientConVar("papaj_enable", "1")
 local max = 10
+local papyszPos = {}
+local papyszMats = {}
+local song
+
 
 surface.CreateFont("PapajHourInba", {
 	font = "Roboto",
@@ -38,31 +42,119 @@ local function GetURL(url, w, h)
     return Material("error")
 end
 
+
+
+for i = 1, max do
+	papyszMats[i] = http.Fetch("http://gmodback.tomekb530.me/papysz?test=" .. i, function(body)
+		papyszMats[i] = body
+	end)
+
+	// Preload
+	timer.Simple(0.33 * i, function()
+		GetURL(papyszMats[i], 100, 100)
+	end)
+end
+
+
+local timedtext = {
+	[0] = "",
+	[1.7] = "Siemanko",
+	[7.4] = "Czy jesteście gotowi na...",
+	[13.3] = "INBE?",
+	[16.2] = ""
+}
+
+local timedeffects = {
+	[0] = function()
+		
+	end,
+	[16.2] = function()
+		local scrw = ScrW()
+		local scrh = ScrH()
+		local color = HSVToColor(song:GetTime()*80,1,1)
+		color.a = 20
+		surface.SetDrawColor(color)
+		surface.DrawRect(0,0,scrw,scrh)
+		--[[local mat = GetURL("http://tomekb530.me/rzulta.png", 256,256)
+		surface.SetMaterial(mat)
+		surface.SetDrawColor(Color(255, 255, 255, 255))
+		local size = 250 + math.sin(song:GetTime()*10)*50
+		surface.DrawTexturedRect(scrw/2-size/2,scrh/2-size/2,size,size)]]--
+	end,
+
+	[28] = function()
+		for i, v in ipairs(papyszPos) do
+			local mat = GetURL(papyszMats[i], 100, 100)
+			
+			surface.SetMaterial(mat)
+			surface.SetDrawColor(Color(255, 255, 255, 255))
+			surface.DrawTexturedRect(v[1] + math.Rand(0, 10), v[2] + math.Rand(0, 10), 256, 256)
+		end
+	end,
+	[50] = function()
+		local fft = {}
+		local num = song:FFT(fft,FFT_1024)
+		local hcalc = ScrH() / num * 2
+		local wcalc = ScrW()
+		for i=1,num do
+			surface.SetDrawColor(HSVToColor(360/num*i,1,1))
+			surface.DrawRect(ScrW()-wcalc*fft[i],hcalc*i,wcalc*fft[i],hcalc)
+			surface.SetDrawColor(HSVToColor(360/num*i,1,1))
+			surface.DrawRect(0,hcalc*i,wcalc*fft[i],hcalc)
+		end
+	end
+}
+
+
+local function getNearestTimedText(time)
+	local nearest = 0
+
+	for k, v in pairs(timedtext) do
+		if k < time and k > nearest then
+			nearest = k
+		end
+	end
+
+	return timedtext[nearest]
+end
+
+local function getEffects(time)
+	local effectsFuncs = {}
+
+	for k, v in pairs(timedeffects) do
+		if k < time then
+			table.insert(effectsFuncs, v)
+		end
+	end
+
+	return effectsFuncs
+end
+
+
+function stopPapysz()
+	hook.Remove("HUDPaint", "PapajHour::HUD")
+	timer.Remove("PapajHour::Updater")
+	timer.Remove("PapajHour::Remover")
+	if song then
+		song:Stop()
+	end
+end
+
 function runPapysz()
 	if not papyszenable:GetBool() then return end
 
-	local song
-	local papyszMats = {}
-	local papyszPos = {}
 	local papyszColor = {}
 
-	for i = 1, max do
-		papyszMats[i] = math.random(1, 10000000)
+	timer.Create("PapajHour::Remover",60,1, function()
+		stopPapysz()
+	end)
 
-		// Preload
-		timer.Simple(0.33 * i, function()
-			GetURL("http://loading.tomekb530.me/papysz?test=" .. papyszMats[i], 100, 100)
-		end)
-	end
-
-	sound.PlayURL("http://tomekb530.me/barka.mp3", "", function(st)
+	sound.PlayURL("http://tomekb530.me/caramell.mp3", "", function(st)
         if IsValid(st) then
             st:Play()
             song = st
 
-            timer.Simple(60, function()
-                st:Stop()
-            end)
+            
         end
     end)
 
@@ -77,14 +169,25 @@ function runPapysz()
 	end)
 
 	hook.Add("HUDPaint", "PapajHour::HUD", function()
-		if song and song:GetTime() > 17 then
-			for i, v in ipairs(papyszPos) do
-				local mat = GetURL("http://loading.tomekb530.me/papysz?test=" .. papyszMats[i], 100, 100)
+		if IsValid(song) then
+			--print(song:GetTime())
+			local text = getNearestTimedText(song:GetTime())
+			surface.SetFont("PapajHourInba")
+			local textWidth,textHeight = surface.GetTextSize(text)
+			draw.SimpleTextOutlined(text, "PapajHourInba", ScrW() / 2, ScrH() / 2, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 255))
 
-				surface.SetMaterial(mat)
-				surface.SetDrawColor(Color(255, 255, 255, 255))
-				surface.DrawTexturedRect(v[1] + math.Rand(0, 10), v[2] + math.Rand(0, 10), 100, 100)
+			local effectsFunc = getEffects(song:GetTime())
+			for k, v in pairs(effectsFunc) do
+				v()
 			end
+		end
+
+
+
+
+
+		--[[if song and song:GetTime() > 17 then
+			
 
 			if song:GetTime() > 40 then
 				surface.SetFont("PapajHourInba")
@@ -102,11 +205,6 @@ function runPapysz()
 					surface.DrawText("Inbaaaa")
 				end
 			end
-		end
-
-		timer.Simple(60, function()
-			hook.Remove("HUDPaint", "PapajHour::HUD")
-			timer.Remove("PapajHour::Updater")
-		end)
+		end]]
 	end)
 end

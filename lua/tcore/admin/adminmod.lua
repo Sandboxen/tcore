@@ -1,7 +1,7 @@
 TCore.AdminMod = TCore.AdminMod or {}
 TCore.AdminMod.Config = TCore.AdminMod.Config or {}
 TCore.AdminMod.Permissions = TCore.AdminMod.Permissions or {}
-TCore.AdminMod.Commands = TCore.AdminMod.Commands or {}
+
 
 local basegroups = {
     "owner","superadmin","admin","operator","user"
@@ -14,9 +14,17 @@ local baseperms = {
     ["operator"] = {},
     ["user"] = {},
 }
-AddCSLuaFile("submodules/test.lua")
-include("submodules/test.lua")
+
+
+include("submodules/commands.lua")
+AddCSLuaFile("submodules/commands.lua")
+
+
+
+include("submodules/syncdata.lua")
+AddCSLuaFile("submodules/syncdata.lua")
 if SERVER then
+    util.AddNetworkString("TCore.AdminMod.Reload")
     local function loadConfig()
         local config = file.Read("tcore/adminmod/config.txt","DATA")
         if config then
@@ -49,9 +57,27 @@ if SERVER then
         createSQLTables()
         TCore.AdminMod.Permissions = TCore.AdminMod.Config.permissions
         TCore.AdminMod.Commands = TCore.AdminMod.Config.commands
+        loadModules()
+    end)
+
+    concommand.Add("tcore_adminmod_reload",function(ply)
+        if ply:IsSuperAdmin() then
+            loadConfig()
+            createSQLTables()
+            TCore.AdminMod.Permissions = TCore.AdminMod.Config.permissions
+            TCore.AdminMod.Commands = TCore.AdminMod.Config.commands
+            loadModules()
+            net.Start("TCore.AdminMod.Reload")
+            net.Broadcast()
+        end
     end)
 
     hook.Add("ShutDown","TCore.AdminMod.Shutdown",function()
         saveConfig()
+    end)
+
+else
+    net.Receive("TCore.AdminMod.Reload",function()
+        loadModules()
     end)
 end
