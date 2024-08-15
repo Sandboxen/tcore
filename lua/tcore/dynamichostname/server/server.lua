@@ -13,8 +13,8 @@ local hostnames = {
       hostnames[k] = lastmsg
       ischatmess = true
     end
-    game.ConsoleCommand("hostname [PL] Sandboxen - "..(wojenna and "Stan Wojenny" or hostnames[k]).."\n")
-    activehostname = "[PL] Sandboxen - "..(wojenna and "Stan Wojenny" or hostnames[k])
+    game.ConsoleCommand("hostname [PL] Sandboxen 2.0 - "..(wojenna and "Stan Wojenny" or hostnames[k]).."\n")
+    activehostname = "[PL] Sandboxen 2.0 - "..(wojenna and "Stan Wojenny" or hostnames[k])
     net.Start("HostnameChangerSync")
     net.WriteString(activehostname)
     net.Broadcast()

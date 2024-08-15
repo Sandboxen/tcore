@@ -151,8 +151,10 @@ if LocalPlayer():InVehicle() then
   if IsValid(veh:GetParent()) and veh:GetVelocity():Length() == 0 then
     veh = veh:GetParent()
   end
-  if IsValid(LocalPlayer():GetSimfphys()) then
-    veh = LocalPlayer():GetSimfphys()
+  if (LocalPlayer().GetSimfphys) then
+    if IsValid(LocalPlayer():GetSimfphys()) then
+      veh = LocalPlayer():GetSimfphys()
+    end
   end
   local speedmph = math.Round(veh:GetVelocity():Length() * 0.0568182* 0.75) --mph
   local speedkmh = math.Round(veh:GetVelocity():Length() *  0.09144* 0.75) --kmh

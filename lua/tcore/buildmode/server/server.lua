@@ -57,26 +57,28 @@ hook.Add("EntityTakeDamage","BuildModeDamage",function(ent,dmg)
                 local dmginfo = DamageInfo()
                 dmginfo:SetDamage(dmg:GetDamage())
                 dmginfo:SetDamageType(DMG_DISSOLVE)
-                dmginfo:SetDamageCustom(21372137)
+                dmginfo:SetDamageCustom(2137)
                 dmginfo:SetInflictor(ent)
                 dmginfo:SetAttacker(ent)
                 attacker:TakeDamageInfo(dmginfo)
             end
-            if attacker:GetBuildMode() and (ent:GetBuildMode() and not isbanni) then
+            if (not attacker:GetBuildMode() and (ent:GetBuildMode() and not isbanni) ) then
                 msgcooldown[attacker] = msgcooldown[attacker] or 0
                 if msgcooldown[attacker] < CurTime() then
-                    attacker:SendLua("chat.AddText(Color(255,0,0),\"[BuildMode] \",Color(255,255,255),\"Nie mozesz atakowac graczy w trybie budowania!\")")
+                    attacker:SendLua("chat.AddText(Color(255,0,0),\"[BuildMode] \",Color(255,255,255),\"Nie mozesz atakowac graczy będących w trybie budowania!\")")
                     msgcooldown[attacker] = CurTime() + 5
                 end
                 dmg:ScaleDamage(0)
             end
-            if not ent:GetBuildMode() and attacker:GetBuildMode() then
+            if not ent:GetBuildMode() and attacker:GetBuildMode()  then
                 msgcooldown[attacker] = msgcooldown[attacker] or 0
-                if msgcooldown[attacker] < CurTime() then
-                    attacker:SendLua("chat.AddText(Color(255,0,0),\"[BuildMode] \",Color(255,255,255),\"Nie mozesz atakowac graczy w trybie budowania!\")")
+                if msgcooldown[attacker] < CurTime() and dmg:GetDamageCustom() != 2137 then
+                    attacker:SendLua("chat.AddText(Color(255,0,0),\"[BuildMode] \",Color(255,255,255),\"Nie mozesz atakowac graczy będąc w trybie budowania!\")")
                     msgcooldown[attacker] = CurTime() + 5
                 end
-                dmg:ScaleDamage(0)
+                if ( dmg:GetDamageCustom() != 2137 ) then
+                    dmg:ScaleDamage(0)
+                end
             end
         end
     end

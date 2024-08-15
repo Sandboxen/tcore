@@ -1,4 +1,4 @@
-TCore.AdminMod = TCore.AdminMod or {}
+--[[TCore.AdminMod = TCore.AdminMod or {}
 TCore.AdminMod.Config = TCore.AdminMod.Config or {}
 TCore.AdminMod.Permissions = TCore.AdminMod.Permissions or {}
 
@@ -81,3 +81,4 @@ else
         loadModules()
     end)
 end
+]]--
