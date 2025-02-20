@@ -91,7 +91,7 @@ if CLIENT then
 	hook.Add("PostPlayerDraw", tag, function(ply)
 		if ply.banni then
 		else
-		if ply.csidemodel then
+		if ply and ply.csidemodel and IsValid(ply.csidemodel)  then
 					ply.csidemodel:SetColor(Color(255,255,255,0))
 					ply.csidemodel:SetRenderMode(RENDERMODE_TRANSALPHA)
 				end
